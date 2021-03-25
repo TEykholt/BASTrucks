@@ -11,15 +11,18 @@
             <tr>
                 <th>Id</th>
                 <th>username</th>
-                <th>subject</th>
-                <th>status id</th>
+                <th>message</th>
+                <th>expertise</th>
+                <th>status</th>
             </tr>
+
             @foreach($results as $result)
                 <tr>
                     <td>{{$result['id']}}</td>
                     <td>{{$result['username']}}</td>
-                    <td>{{$result['subject']}}</td>
-                    <td>{{$result['status_id']}}</td>
+                    <td>{{$result['message']}}</td>
+                    <td>{{$result['name']}}</td>
+                    <td>{{$result['status']}}</td>
                 </tr>
             @endforeach
         </table>

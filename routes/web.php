@@ -13,3 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', [\App\Http\Controllers\TicketController::class, 'getAllTickets']);
+
+Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
