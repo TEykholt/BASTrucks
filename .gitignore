@@ -11,4 +11,12 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 
+composer.json
+
+composer.lock
+
+public/js/app.js
+
+resources/js/bootstrap.js
+
 .idea/
