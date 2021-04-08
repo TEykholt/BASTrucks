@@ -16,6 +16,14 @@ class TicketController extends Controller
     function addTicket(Request $request){
         $ticket = new TicketModel;
         $ticket->person_id = $request->person_id;
+        $ticket->department_id = $request->department_id;
+        $ticket->date_created = date("Y-m-d-h"); //Date time
+
         $ticket->subject = $request->subject;
+        $ticket->message = $request->message;
+        $ticket->status = "open";
+        $ticket->save();
+
+        return view("ticketInvoer");
     }
 }
