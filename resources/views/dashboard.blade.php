@@ -4,6 +4,8 @@
             <tr class="thead">
                 <th>Id</th>
                 <th>username</th>
+                <th>type</th>
+                <th>subject</th>
                 <th>message</th>
                 <th>expertise</th>
                 <th>status</th>
@@ -13,6 +15,8 @@
                 <tr class="trow">
                     <td>{{$result['id']}}</td>
                     <td>{{$result['username']}}</td>
+                    <td>{{$result['type']}}</td>
+                    <td>{{$result['subject']}}</td>
                     <td>{{$result['message']}}</td>
                     <td>{{$result['name']}}</td>
                     <td>{{$result['status']}}</td>
