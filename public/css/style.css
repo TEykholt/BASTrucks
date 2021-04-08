@@ -1,0 +1,31 @@
+.content{
+    margin-top: 1%;
+}
+.navbar{
+    background: #373E82;
+}
+.navbar .navbar-nav .nav-link{
+    color: white;
+}
+.navbar .navbar-nav .nav-link:hover{
+    font-weight: bold;
+}
+.logo{
+    width: 10%;
+}
+.top-header{
+    padding: 2%;
+}
+.u-info{
+    margin-top: 3%;
+}
+.table .thead{
+    background: #373E82;
+    color: white;
+}
+.table{
+    border-bottom: 1px solid #d4d4d4;
+}
+.table .trow{
+    background: #eeeeee;
+}

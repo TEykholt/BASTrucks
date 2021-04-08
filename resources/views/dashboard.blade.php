@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <title>Dashboard</title>
-        <link href="/css/app.css" rel="stylesheet">
-    </head>
-    <body>
-    <div class="container">
+@include("incl/header")
         <h1 class="mt-2">Dashboard</h1>
         <table class="table">
-            <tr>
+            <tr class="thead">
                 <th>Id</th>
                 <th>username</th>
                 <th>message</th>
@@ -17,7 +10,7 @@
             </tr>
 
             @foreach($results as $result)
-                <tr>
+                <tr class="trow">
                     <td>{{$result['id']}}</td>
                     <td>{{$result['username']}}</td>
                     <td>{{$result['message']}}</td>
