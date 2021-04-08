@@ -29,3 +29,11 @@
 .table .trow{
     background: #eeeeee;
 }
+.btn-primary{
+    background: #373E82;
+    border-color: #373E82;
+}
+.btn-primary:hover{
+    background: #1f254a;
+    border-color:#1f254a;
+}
