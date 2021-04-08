@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [\App\Http\Controllers\TicketController::class, 'getAllTickets']);
 
-Route::post('/ticketInput', [\App\Http\Controllers\TicketController::class, 'addTicket']);
+Route::post('/ticketInput/addTicket', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::get('/ticketInput', function(){
-    return view("ticketInvoer");
+    return view("ticketInput");
 });
 
 Auth::routes();

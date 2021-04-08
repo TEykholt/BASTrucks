@@ -25,10 +25,11 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Dashboard</a>
+                    <a class="nav-link" href="{{url('/')}}">Dashboard</a>
                 </li>
+                
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Ticket invoer</a>
+                    <a class="nav-link" href="{{url('/ticketInput')}}">Ticket invoer</a>
                 </li>
             </ul>
         </div>
