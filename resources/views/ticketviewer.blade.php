@@ -1,5 +1,5 @@
 @include("incl/header")
-        <h1 class="mt-2">Dashboard</h1>
+        <h1 class="mt-2">ticketviewer</h1>
         <table class="table">
             <tr class="thead">
                 <th>Id</th>

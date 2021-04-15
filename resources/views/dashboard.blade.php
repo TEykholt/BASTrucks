@@ -23,7 +23,7 @@
 
                     <form name="toticketviewer" action="\ticketviewer" method="POST" style="display: none;">
                         @csrf
-                        <input name="id" value="{{$result['id']}}">
+                        <input name="id" value="{{$result['id']}}" style="display: none;">
                     </form>
                 </tr>
             @endforeach
@@ -35,7 +35,7 @@
         function submitForm(event){
             var TrChildren = event.target.parentNode.children
             var toticketviewerForm = null
-            
+
             for (let index = 0; index < TrChildren.length; index++) {
                 const element = TrChildren[index];
                 if (element.nodeName == "FORM") {
