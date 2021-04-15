@@ -7,16 +7,25 @@
     <script src="https://kit.fontawesome.com/3daacf6a8c.js" crossorigin="anonymous"></script>
 </head>
 <body>
+@guest
+@else
 <div class="container top-header">
     <div class="d-flex">
         <img class="logo" src="{{ URL::asset('img/logo.png')}}" alt="logo">
         <div class="ml-auto  u-info">
-            <a><i class="fas fa-bell"></i></a>
-            <a >Tom Eykholt</a>
+            <a><i class="fas fa-bell"></i></a>            
+            <a >{{ Auth::user()->name }}</a>            
             <img class="icon" src="{{ URL::asset('img/icon.png')}}" alt="icon">
+            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                {{ __('Logout') }}
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </div>
     </div>
 </div>
+@endguest
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
