@@ -8,7 +8,11 @@ use Illuminate\Http\Request;
 class TicketController extends Controller
 {
     function getAllTickets(){
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")->join("department","department.id","=","support_ticket.department_id")->get();
+        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
+            ->join("department","department.id","=","support_ticket.department_id")
+            ->where('username', 'Admin')
+            ->where('department.name', 'ICT')
+            ->get();
 
         return view('dashboard')->with('results' , $data);
     }
@@ -25,7 +29,7 @@ class TicketController extends Controller
         $ticket->message = $request->message;
         $ticket->status = "open";
         $ticket->save();
-        
+
         return view("ticketInput");
     }
 }
