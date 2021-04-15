@@ -26,12 +26,40 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                            <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('User Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                                <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
 
-                                @error('email')
+                                @error('username')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="job_title" class="col-md-4 col-form-label text-md-right">{{ __('Job Title') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="job_title" type="text" class="form-control @error('job_title') is-invalid @enderror" name="job_title" value="{{ old('job_title') }}" required autocomplete="job_title" autofocus>
+
+                                @error('job_title')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="max_amount_tickets" class="col-md-4 col-form-label text-md-right">{{ __('max_amount_tickets') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="max_amount_tickets" type="number" class="form-control @error('max_amount_tickets') is-invalid @enderror" name="max_amount_tickets" value="{{ old('max_amount_tickets') }}" required autocomplete="max_amount_tickets" autofocus>
+
+                                @error('max_amount_tickets')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'username', 'password', 'job_title', 'max_amount_tickets'
     ];
 
     /**
@@ -34,6 +34,13 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        
     ];
+
+    /** 
+     *  The table associated with the model.
+     * 
+     *  @var string 
+     */
+    protected $table = 'person';
 }
