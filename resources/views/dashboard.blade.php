@@ -12,7 +12,7 @@
             </tr>
 
             @foreach($results as $result)
-                <tr class="trow">
+                <tr class="trow" onclick="submitForm(event);">
                     <td>{{$result['id']}}</td>
                     <td>{{$result['username']}}</td>
                     <td>{{$result['type']}}</td>
@@ -20,10 +20,34 @@
                     <td>{{$result['message']}}</td>
                     <td>{{$result['name']}}</td>
                     <td>{{$result['status']}}</td>
+
+                    <form name="toticketviewer" action="\ticketviewer" method="POST" style="display: none;">
+                        @csrf
+                        <input name="id" value="{{$result['id']}}">
+                    </form>
                 </tr>
             @endforeach
+
+
         </table>
     </div>
+    <script>
+        function submitForm(event){
+            var TrChildren = event.target.parentNode.children
+            var toticketviewerForm = null
+            
+            for (let index = 0; index < TrChildren.length; index++) {
+                const element = TrChildren[index];
+                if (element.nodeName == "FORM") {
+                    toticketviewerForm = element
+                    break;
+                }
+            }
 
+            if (toticketviewerForm) {
+                toticketviewerForm.submit();  
+            }
+        }      
+    </script>
     </body>
 </html>
