@@ -21,6 +21,7 @@ Route::get('/ticketInput', function(){
 Route::get('/kpi', [\App\Http\Controllers\kpiController::class, 'GetAllKPIs']);
 
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
+Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'GetSingle']);
 
 Auth::routes();
 

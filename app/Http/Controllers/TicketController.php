@@ -24,7 +24,6 @@ class TicketController extends Controller
         $ticket->person_id = $request->person_id;
         $ticket->department_id = $request->department_id;
         $ticket->type = $request->ticket_type;
-        //$ticket->cret = date("Y-m-d-h"); //Date time
 
         $ticket->subject = $request->subject;
         $ticket->message = $request->message;
@@ -32,5 +31,14 @@ class TicketController extends Controller
         $ticket->save();
 
         return view("ticketInput");
+    }
+
+    function GetSingle(Request $repuest) {
+        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
+            ->join("department","department.id","=","support_ticket.department_id")
+            ->where('id', $repuest->id)
+            ->get();
+
+        return view("ticketviewer")->with('results' , $data);
     }
 }
