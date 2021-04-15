@@ -23,6 +23,7 @@ class TicketController extends Controller
         $ticket = new TicketModel;
         $ticket->person_id = $request->person_id;
         $ticket->department_id = $request->department_id;
+        $ticket->type = $request->ticket_type;
         //$ticket->cret = date("Y-m-d-h"); //Date time
 
         $ticket->subject = $request->subject;
