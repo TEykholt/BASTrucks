@@ -43,7 +43,10 @@
             </div>
             <div class="form-group">
                 <label for="message">Message</label>
-                <input id="message" type="text" name="message" class="form-control">
+                <textarea id="message" class="form-control" name="message" cols="40" rows="5">
+
+                </textarea>
+                <!-- <input id="message" type="text" name="message" class="form-control"> -->
             </div>
             <div class="form-group">
                 <label for="Attachments">Attachments</label>
