@@ -17,7 +17,7 @@
                     <td>{{$result['username']}}</td>
                     <td>{{$result['type']}}</td>
                     <td>{{$result['subject']}}</td>
-                    <td>{{$result['message']}}</td>
+                    <td>{{ \Illuminate\Support\Str::limit($result['message'], $limit = 75, $end = '...')}}</td>
                     <td>{{$result['name']}}</td>
                     <td>{{$result['status']}}</td>
 
@@ -45,9 +45,9 @@
             }
 
             if (toticketviewerForm) {
-                toticketviewerForm.submit();  
+                toticketviewerForm.submit();
             }
-        }      
+        }
     </script>
     </body>
 </html>

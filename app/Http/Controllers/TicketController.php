@@ -15,6 +15,7 @@ class TicketController extends Controller
     function getAllTickets(){
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'username', 'department.name')
             ->where('username', 'Admin')
             ->where('department.name', 'ICT')
             ->get();
@@ -41,6 +42,7 @@ class TicketController extends Controller
     function GetSingle(Request $repuest) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'username', 'department.name')
             ->where('support_ticket.id', $repuest->id)
             ->get();
 

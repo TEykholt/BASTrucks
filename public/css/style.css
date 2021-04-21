@@ -37,3 +37,12 @@
     background: #1f254a;
     border-color:#1f254a;
 }
+.employee_background{
+    border-radius: 10px;
+    background: #f3f3f3;
+
+}
+.employee{
+
+    padding: 2%;
+}
