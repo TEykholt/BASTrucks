@@ -4427,12 +4427,14 @@ input[type=button].btn-block {
 }
 
 .nav-link {
+    color: white;
   display: block;
   padding: 0.5rem 1rem;
 }
 
 .nav-link:hover,
 .nav-link:focus {
+    color: #d7d7d7;
   text-decoration: none;
 }
 
@@ -4509,6 +4511,7 @@ input[type=button].btn-block {
 }
 
 .navbar {
+    background: #373E82;
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -4530,6 +4533,7 @@ input[type=button].btn-block {
 }
 
 .navbar-brand {
+    color: white;
   display: inline-block;
   padding-top: 0.32rem;
   padding-bottom: 0.32rem;
@@ -4541,6 +4545,7 @@ input[type=button].btn-block {
 
 .navbar-brand:hover,
 .navbar-brand:focus {
+    color: #d7d7d7;
   text-decoration: none;
 }
 
@@ -5037,12 +5042,25 @@ input[type=button].btn-block {
 }
 
 .card-header {
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  background-color: rgba(0, 0, 0, 0.03);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #373E82;
+    color: white;
 }
-
+.top-header{
+    padding: 2%;
+}
+.btn-primary{
+    background: #373E82;
+    border-color: #373E82;
+}
+.btn-primary:hover{
+    background: #1f254a;
+    border-color:#1f254a;
+}
+.logo{
+    width: 10%;
+}
 .card-header:first-child {
   border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
 }

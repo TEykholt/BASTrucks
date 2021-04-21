@@ -1,3 +1,6 @@
+body{
+    background-color: white;
+}
 .content{
     margin-top: 1%;
 }
@@ -27,7 +30,7 @@
     border-bottom: 1px solid #d4d4d4;
 }
 .table .trow{
-    background: #eeeeee;
+    background: #fafafa;
 }
 .btn-primary{
     background: #373E82;
@@ -45,4 +48,7 @@
 .employee{
 
     padding: 2%;
+}
+tr{
+    cursor: pointer;
 }
