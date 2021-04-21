@@ -49,6 +49,6 @@ body{
 
     padding: 2%;
 }
-tr{
+.trow{
     cursor: pointer;
 }
