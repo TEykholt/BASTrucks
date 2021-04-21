@@ -15,7 +15,7 @@ class TicketController extends Controller
     function getAllTickets(){
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name', 'department.name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->get();
 
         return view('dashboard')->with('results' , $data);
@@ -28,7 +28,7 @@ class TicketController extends Controller
 
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name', 'department.name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->where('support_ticket.status', $Status)
             ->get();
         
@@ -38,7 +38,7 @@ class TicketController extends Controller
     function getAllTicketsFromUser() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name', 'department.name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->where('support_ticket.person_id', auth()->user()->id)
             ->get();
         
@@ -48,7 +48,7 @@ class TicketController extends Controller
     function getAllTicketsFromUserWithStatus($Status) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name', 'department.name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->where('support_ticket.person_id', auth()->user()->id)
             ->where('support_ticket.status', $Status)
             ->get();
@@ -59,7 +59,7 @@ class TicketController extends Controller
     function getAllTicketsFromUserDepartment() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name', 'department.name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->where('department.name', 'ICT')
             ->get();
         
@@ -69,10 +69,10 @@ class TicketController extends Controller
     function GetSingle(Request $repuest) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name', 'department.name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->where('support_ticket.id', $repuest->id)
             ->get();
-
+        
         return view("ticketviewer")->with('results' , $data);
     }
 

@@ -14,11 +14,11 @@
             @foreach($results as $result)
                 <tr class="trow" onclick="submitForm(event);">
                     <td>{{$result['id']}}</td>
-                    <td>{{$result['name']}}</td>
+                    <td>{{$result['person_name']}}</td>
                     <td>{{$result['type']}}</td>
                     <td>{{$result['subject']}}</td>
                     <td>{{ \Illuminate\Support\Str::limit($result['message'], $limit = 75, $end = '...')}}</td>
-                    <td>{{$result['name']}}</td>
+                    <td>{{$result['department_name']}}</td>
                     <td>{{$result['status']}}</td>
 
                     <form name="toticketviewer" action="\ticketviewer" method="POST" style="display: none;">
