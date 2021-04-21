@@ -17,7 +17,6 @@
                     "Change",
                     "Reporting error"
                 );
-
             ?>
 
             <div class="form-group">
@@ -43,21 +42,13 @@
             </div>
             <div class="form-group">
                 <label for="message">Message</label>
-                <textarea required id="message" class="form-control" style="resize: vertical" name="message" cols="40" rows="5"></textarea>
+                <textarea required id="message" class="form-control" name="message" cols="40" rows="5"></textarea>
                 <!-- <input id="message" type="text" name="message" class="form-control"> -->
             </div>
             <div class="form-group">
                 <label for="Attachments">Attachments</label>
-                <input type="file" accept="image/*" name="Attachments" id="Attachments" class="form-control" multiple>
+                <input type="file" accept="image/*" name="Attachments" id="Attachments" multiple>
             </div>
-
-             <!--
-            <div class="form-group">
-                <label for="person_id">Person_id</label>
-                <input id="person_id" type="text" name="person_id" class="form-control">
-            </div>
-            -->
-
 
             <input type="button" class="btn btn-primary" onclick="fireAlert()" value="Submit">
         </form>

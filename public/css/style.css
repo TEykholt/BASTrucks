@@ -52,3 +52,11 @@ body{
 .trow{
     cursor: pointer;
 }
+
+#message {
+    resize: vertical;
+}   
+
+#Attachments {
+    display:block;
+}
