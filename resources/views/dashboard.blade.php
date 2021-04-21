@@ -3,7 +3,7 @@
         <table class="table">
             <tr class="thead">
                 <th>Id</th>
-                <th>username</th>
+                <th>name</th>
                 <th>type</th>
                 <th>subject</th>
                 <th>message</th>
@@ -14,7 +14,7 @@
             @foreach($results as $result)
                 <tr class="trow" onclick="submitForm(event);">
                     <td>{{$result['id']}}</td>
-                    <td>{{$result['username']}}</td>
+                    <td>{{$result['name']}}</td>
                     <td>{{$result['type']}}</td>
                     <td>{{$result['subject']}}</td>
                     <td>{{ \Illuminate\Support\Str::limit($result['message'], $limit = 75, $end = '...')}}</td>

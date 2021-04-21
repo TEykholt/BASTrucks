@@ -22,11 +22,12 @@
             </div>
         </div>
 
+        <!--ToDo: Get all logs from ticket-->
         <h4 class="mt-2">Log</h4>
         <table class="table">
             <tr class="thead">
                 <th>Date</th>
-                <th>Username</th>
+                <th>Name</th>
                 <th>Message</th>
             </tr>
 
