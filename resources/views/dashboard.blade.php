@@ -23,7 +23,7 @@
 
                     <form name="toticketviewer" action="\ticketviewer" method="POST" style="display: none;">
                         @csrf
-                        <input name="id" value="{{$result['id']}}" style="display: none;">
+                        <input hidden name="id" value="{{$result['id']}}">
                     </form>
                 </tr>
             @endforeach
@@ -43,7 +43,6 @@
                     break;
                 }
             }
-
             if (toticketviewerForm) {
                 toticketviewerForm.submit();
             }

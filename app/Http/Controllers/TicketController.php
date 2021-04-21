@@ -18,7 +18,7 @@ class TicketController extends Controller
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'username', 'department.name')
             ->where('department.name', 'ICT')
             ->get();
-            
+
         return view('dashboard')->with('results' , $data);
     }
 
@@ -29,8 +29,8 @@ class TicketController extends Controller
         ->where('username', auth()->user()->username)
         ->where('department.name', 'ICT')
         ->get();
-        
-    return view('dashboard')->with('results' , $data);
+
+        return view('dashboard')->with('results' , $data);
     }
 
 
@@ -56,6 +56,6 @@ class TicketController extends Controller
         $ticket->status = "open";
         $ticket->save();
 
-        return view("ticketInput");
+        return $this->getAllTicketsFromUser();
     }
 }

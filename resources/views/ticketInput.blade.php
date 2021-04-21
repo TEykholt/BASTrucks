@@ -1,16 +1,16 @@
 @include("incl/header")
 <h1>Insert Ticket</h1>
-        <form method="POST" action="/ticketInput/addTicket">
+        <form method="POST" id="input_form" action="/ticketInput/addTicket">
             @csrf
 
-            <?php 
+            <?php
                 $results = array(
                     array(
                         "id" => 1,
                         "name" => "ICT",
                     )
                 );
-            
+
                 $TicketTypes = array(
                     "Feature",
                     "Bug",
@@ -55,12 +55,27 @@
             <div class="form-group">
                 <label for="person_id">Person_id</label>
                 <input id="person_id" type="text" name="person_id" class="form-control">
-            </div>    
+            </div>
             -->
 
 
-            <input type="submit" class="btn btn-primary">
+            <input type="button" class="btn btn-primary" onclick="fireAlert()" value="Submit">
         </form>
+         <script>
+            function fireAlert(){
+                Swal.fire(
+                    'Ticket submitted',
+                    '',
+                    'success'
+
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById("input_form").submit()
+                    }
+                })
+            }
+         </script>
+
         </div>
     </body>
 </html>

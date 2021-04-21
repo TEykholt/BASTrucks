@@ -5,6 +5,7 @@
     <link href="{{ URL::asset('css/app.css')}}" rel="stylesheet">
     <link href="{{ URL::asset('css/style.css')}}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/3daacf6a8c.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
 @guest
@@ -13,8 +14,8 @@
     <div class="d-flex">
         <img class="logo" src="{{ URL::asset('img/logo.png')}}" alt="logo">
         <div class="ml-auto  u-info">
-            <a><i class="fas fa-bell"></i></a>            
-            <a >{{ Auth::user()->name }}</a>            
+            <a><i class="fas fa-bell"></i></a>
+            <a >{{ Auth::user()->name }}</a>
             <img class="icon" src="{{ URL::asset('img/icon.png')}}" alt="icon">
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 {{ __('Logout') }}
@@ -36,7 +37,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{{url('/')}}">Dashboard</a>
                 </li>
-                
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('/ticketInput')}}">Ticket invoer</a>
                 </li>
