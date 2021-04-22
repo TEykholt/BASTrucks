@@ -21,25 +21,27 @@
                 </div>
             </div>
         </div>
-
-        <!--ToDo: Get all logs from ticket-->
-        <h4 class="mt-2">Log</h4>
-        <table class="table">
-            <tr class="thead">
-                <th>Date</th>
-                <th>Name</th>
-                <th>Message</th>
-            </tr>
-
-
-                <tr class="trow">
-                    <td>21-04-2021</td>
-                    <td>Tom Eykholt</td>
-                    <td>Changed ticket type to Feature</td>
-                </tr>
-
-        </table>
-    </div>
 @endforeach
-    </body>
+
+
+@foreach($logs as $log)
+    <!--ToDo: Get all logs from ticket-->
+    <h4 class="mt-2">Log</h4>
+    <table class="table">
+        <tr class="thead">
+            <th>Date</th>
+            <th>Name</th>
+            <th>Message</th>
+        </tr>
+
+        <tr class="trow">
+            <td>{{$log['message']}}</td>
+            <td>{{$log['date_created']}}</td>
+            <td>{{$log['created_by']}}</td>
+        </tr>
+
+    </table>
+@endforeach
+</div>
+</body>
 </html>

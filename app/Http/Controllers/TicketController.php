@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\TicketModel;
+use App\TicketLogModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -78,6 +79,7 @@ class TicketController extends Controller
         return view('dashboard')->with('results' , $data);
     }
 
+
     function GetSingle(Request $repuest) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
@@ -85,7 +87,11 @@ class TicketController extends Controller
             ->where('support_ticket.id', $repuest->id)
             ->get();
 
-        return view("ticketviewer")->with('results' , $data);
+        $logs = TicketLogModel::select("message","date_created","created_by")
+            ->where('ticket_id', $repuest->id)
+            ->get();
+
+        return view("ticketviewer")->with('results' , $data)->with('logs' , $logs);
     }
 
     function addTicket(Request $request){
