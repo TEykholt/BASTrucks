@@ -34,7 +34,7 @@
 
         <tr class="trow">
             <td>{{$log['message']}}</td>
-            <td>{{$log['date_created']}}</td>
+            <td>{{$log['created_at']}}</td>
             <td>{{$log['created_by']}}</td>
         </tr>
 

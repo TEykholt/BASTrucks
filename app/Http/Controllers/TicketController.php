@@ -87,7 +87,7 @@ class TicketController extends Controller
             ->where('support_ticket.id', $repuest->id)
             ->get();
 
-        $logs = TicketLogModel::select("message","date_created","created_by")
+        $logs = TicketLogModel::select("message","created_at","created_by")
             ->where('ticket_id', $repuest->id)
             ->get();
 
