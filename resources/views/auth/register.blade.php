@@ -54,12 +54,12 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="max_amount_tickets" class="col-md-4 col-form-label text-md-right">{{ __('max_amount_tickets') }}</label>
+                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('email') }}</label>
 
                             <div class="col-md-6">
-                                <input id="max_amount_tickets" type="number" class="form-control @error('max_amount_tickets') is-invalid @enderror" name="max_amount_tickets" value="{{ old('max_amount_tickets') }}" required autocomplete="max_amount_tickets" autofocus>
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
-                                @error('max_amount_tickets')
+                                @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

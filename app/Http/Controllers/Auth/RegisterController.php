@@ -54,7 +54,7 @@ class RegisterController extends Controller
             'username' => ['required', 'string', 'max:25'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'job_title' => ['required', 'string', 'max:25'],
-            'max_amount_tickets' => ['required', 'int', 'max:11'],
+            'email' => ['required', 'string', 'email', 'max:255'],
         ]);
     }
 
