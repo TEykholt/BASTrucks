@@ -3,7 +3,7 @@
         <table class="table">
             <tr class="thead">
                 <th>Id</th>
-                <th>name</th>
+                <th>ticket holder</th>
                 <th>type</th>
                 <th>subject</th>
                 <th>message</th>
