@@ -107,7 +107,7 @@ class TicketController extends Controller
         $ticket->save();
 
         $mailcontroller = new MailController();
-        $mailcontroller->SendEmail($request->subject, "About your ticket, ", $request->message, "459821@student.fontys.nl");
+        //$mailcontroller->SendEmail($request->subject, "About your ticket, ", $request->message, "460123@student.fontys.nl");
 
         return $this->getAllTicketsFromUser();
     }

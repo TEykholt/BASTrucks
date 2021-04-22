@@ -15,7 +15,7 @@
             <option value="Closed">Closed</option>
         </select>
     </div>
-    <div class="Filter-Button" onclick="filter(event)">
+    <div class="Filter-Button" onclick="filterTickets(event)">
         Filter
     </div>
 </div>
@@ -87,7 +87,7 @@
 
                                 var Attribute = SelectionChildren[z].attributes.getNamedItem("value")
                                 if (Attribute) {
-                                    Item["Value"] = Attribute.value.toLowerCase();
+                                    Item["value"] = Attribute.value.toLowerCase();
                                     break;
                                 }
                             }
@@ -100,7 +100,7 @@
                 case "LABEL":
                     var Attribute = FilterItemChildren[j].attributes.getNamedItem("for")
                     if (Attribute) {
-                        Item["Column"] = Attribute.value.toLowerCase();
+                        Item["column"] = Attribute.value.toLowerCase();
                     }
                     break;
             }
@@ -116,12 +116,51 @@
         for (let i = 0; i < ListOfElements.length; i++) {
             const element = ListOfElements[i];
             if (element.className == "Filter-Item") {
-                ListOfElements.push(getFilterItemColumnValue(element));
+                FilterItems.push(getFilterItemColumnValue(element));
             }
         }
+
+        return FilterItems;
     }
 
-    function filter(event) {
+    function hasName(Element, Name) {
+        var NameAttribute = Element.attributes.getNamedItem("name")
+        if (!NameAttribute) {
+            return false;
+        }
+
+        if (!NameAttribute.value.toLowerCase() == Name.toLowerCase()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function rowAdherestoFilter(rowElement, filterList) {
+        var rowCells = rowElement.children
+        var Adheres = false;
+
+        for (let i = 0; i < rowCells.length; i++) {
+            const Cell = rowCells[i];
+
+            for (let index = 0; index < filterList.length; index++) {
+                const filterItem = filterList[index];
+                if (hasName(Cell, filterItem["column"])) {
+
+                    if ((filterItem["value"].toLowerCase() == "none") || Cell.textContent.toLowerCase() == filterItem["value"].toLowerCase()) {
+                        Adheres = true;
+                        console.log(Adheres);
+                        continue;
+                    }
+                }
+            }
+        }
+
+        console.log(Adheres);
+        return Adheres;
+    }
+
+    function filterTickets(event) {
         var FilterButton, FilterList, FilterListItems;
         FilterButton = event.target;
         if (!FilterButton) {
@@ -138,16 +177,35 @@
             console.error("Filter-List was not defined");
             return null;
         }
+
         var FilterItems = getFilterList(FilterList.children);
 
         // Debug: Print the filter variables
-        for (let index = 0; index < FilterItems.length; index++) {
-            const element = FilterItems[index];
-            console.log(element["Value"]);
-            console.log(element["Column"]);
+        // for (let index = 0; index < FilterItems.length; index++) {
+        //     const element = FilterItems[index];
+        //     console.log(element["value"]);
+        //     console.log(element["column"]);
+        // }
+
+        //Hide non matching items
+        var Table = document.getElementById("tickets-table");
+        if (!Table) {
+            return null;
         }
 
-        //ToDo: Hide non matching items
+        var TableBody = Table.firstElementChild;
+        var TableRows = TableBody.getElementsByClassName("trow");
+        for (let index = 0; index < TableRows.length; index++) {
+            const row = TableRows[index];
+            var RowAdherestToFilter = rowAdherestoFilter(row, FilterItems);
+            //console.log(RowAdherestToFilter);
+            if (!RowAdherestToFilter) {
+                row.setAttribute("hidden", "");
+            } else {
+                //console.log("remove");
+                row.removeAttribute("hidden");
+            }
+        }
     }
 </script>
 </body>
