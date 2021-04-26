@@ -20,3 +20,7 @@ public/js/app.js
 resources/js/bootstrap.js
 
 .idea/
+
+package-lock.json
+
+package.json
