@@ -23,20 +23,6 @@ class TicketController extends Controller
         return view('dashboard')->with('results' , $data);
     }
 
-    function getAllTicketsWithStatus($Status){
-        if (!$Status) {
-            return null;
-        }
-
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
-            ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
-            ->where('support_ticket.status', $Status)
-            ->get();
-
-        return view('dashboard')->with('results' , $data);
-    }
-
     function getAllTicketsFromUser() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
@@ -46,34 +32,11 @@ class TicketController extends Controller
 
         return view('dashboard')->with('results' , $data);
     }
-
-    function getAllTicketsFromUserWithStatus($Status) {
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
-            ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
-            ->where('support_ticket.person_id', auth()->user()->id)
-            ->where('support_ticket.status', $Status)
-            ->get();
-
-        return view('dashboard')->with('results' , $data);
-    }
-
     function getAllTicketsFromUserDepartment() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->where('department.name', 'ICT')
-            ->get();
-
-        return view('dashboard')->with('results' , $data);
-    }
-
-    function getAllTicketsFromUserDepartmentWithStatus($Status) {
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
-            ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
-            ->where('department.name', 'ICT')
-            ->where('support_ticket.status', $Status)
             ->get();
 
         return view('dashboard')->with('results' , $data);
