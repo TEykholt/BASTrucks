@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\TicketModel;
 use App\TicketLogModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -46,7 +47,7 @@ class TicketController extends Controller
     function GetSingle(Request $repuest) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name', 'attachment')
             ->where('support_ticket.id', $repuest->id)
             ->get();
 
@@ -59,7 +60,7 @@ class TicketController extends Controller
 
     function addTicket(Request $request){
         $request->except('_token');
-
+        $file = $request->file("Attachments");
         $ticket = new TicketModel;
         $ticket->person_id = auth()->user()->id;
         $ticket->department_id = $request->department_id;
@@ -67,6 +68,11 @@ class TicketController extends Controller
         $ticket->subject = $request->subject;
         $ticket->message = $request->message;
         $ticket->status = "open";
+        if($file != null){
+            $ticket->attachment = $file->getClientOriginalName();
+            $destinationPath = 'uploaded_files';
+            $file->move($destinationPath,$file->getClientOriginalName());
+        }
         $ticket->save();
 
         $mailcontroller = new MailController();
@@ -77,7 +83,7 @@ class TicketController extends Controller
 
     function closeTicket($id){
         TicketModel::where('id', $id)
-            ->update(['status' => "closed"]);
+            ->update(['status' => "closed", "closed_at" => Carbon::now()]);
 
         $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->where('support_ticket.id', $id)->first();
 

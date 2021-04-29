@@ -1,6 +1,6 @@
 @include("incl/header")
 <h1>Insert Ticket</h1>
-        <form method="POST" id="input_form" action="/ticketInput/addTicket">
+        <form method="POST" id="input_form" action="/ticketInput/addTicket" enctype="multipart/form-data">
             @csrf
 
             <?php
