@@ -1,10 +1,20 @@
 @include("incl/header")
 @foreach($results as $result)
-<h1 class="mt-2">Ticket - {{$result['id']}}</h1>
-<select class="form-control mb-4 w-25">
-    <option selected value="{{$result['type']}}">{{$result['type']}}</option>
-    <option value="Bug">Bug</option>
-</select>
+    <div class="row">
+        <div class="col-lg-6">
+            <h1 class="mt-2">Ticket - {{$result['id']}}</h1>
+            <select class="form-control mb-4 w-25">
+                <option selected value="{{$result['type']}}">{{$result['type']}}</option>
+                <option value="Bug">Bug</option>
+            </select>
+        </div>
+        <div class="col-lg-6 d-flex">
+            <div class="ml-auto">
+                <a href="{{ url('/closeTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Close Ticket</a>
+            </div>
+        </div>
+    </div>
+
 <div class="row">
     <div class="col-lg-7">
         <h4 class="pt-2">{{$result['subject']}}</h4>
@@ -19,6 +29,7 @@
             <div class="d-flex"> Tjerk Zeilstra <a class="ml-auto" href="#">Add to ticket</a></div>
             <div class="d-flex"> Rik den Breejen <a class="ml-auto" href="#">Add to ticket</a></div>
         </div>
+    </div>
 @endforeach
 
 

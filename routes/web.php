@@ -18,6 +18,8 @@ Route::post('/ticketInput/addTicket', [\App\Http\Controllers\TicketController::c
 Route::get('/ticketInput', function(){
     return view("ticketInput");
 });
+Route::get('/closeTicket/{id}', 'TicketController@closeTicket');
+
 Route::get('/kpi', [\App\Http\Controllers\kpiController::class, 'GetAllKPIs']);
 
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);

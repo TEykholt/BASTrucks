@@ -70,7 +70,19 @@ class TicketController extends Controller
         $ticket->save();
 
         $mailcontroller = new MailController();
-        $mailcontroller->SendEmail($request->subject, "About your ticket, ", $request->message,  auth()->user()->email);
+        $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
+
+        return $this->getAllTicketsFromUser();
+    }
+
+    function closeTicket($id){
+        TicketModel::where('id', $id)
+            ->update(['status' => "closed"]);
+
+        $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->where('support_ticket.id', $id)->first();
+
+        $mailcontroller = new MailController();
+        $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket.",  $ticket->email);
 
         return $this->getAllTicketsFromUser();
     }

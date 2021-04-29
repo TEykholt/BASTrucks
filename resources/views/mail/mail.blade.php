@@ -1,5 +1,10 @@
-<h1>{{ auth()->user()->name}}</h1>
+<h3>{{$mailinfo['title']}}</h3>
 <p>
-    {{$mailinfo['title']}}
     {{$mailinfo['body']}}
 </p>
+<p>
+    Kind regards,
+
+    BAS Trucks
+</p>
+<img src="{{ $message->embed(public_path() . '/img/logo.png') }}" alt="" />
