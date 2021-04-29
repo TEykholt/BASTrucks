@@ -1,5 +1,5 @@
 @include("incl/header")
-<div class="d-flex">
+<div class="d-flex pt-3 pb-3">
     <h1 class="mt-2">Dashboard</h1>
 
     <div class="Filter-List ml-auto">
