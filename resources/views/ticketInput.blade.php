@@ -47,7 +47,7 @@
             </div>
             <div class="form-group">
                 <label for="Attachments">Attachments</label>
-                <input type="file" accept="image/*" name="Attachments" id="Attachments" multiple>
+                <input type="file" accept="image/*" name="Attachments[]" id="Attachments" multiple>
             </div>
 
             <input type="button" class="btn btn-primary" onclick="fireAlert()" value="Submit">

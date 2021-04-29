@@ -1,5 +1,6 @@
 @include("incl/header")
 @foreach($results as $result)
+
     <div class="row">
         <div class="col-lg-6">
             <h1 class="mt-2">Ticket - {{$result['id']}}</h1>
@@ -22,9 +23,16 @@
         </p>
     </div>
     <div class="col-lg-5 ">
-        @if($result['attachment'] != null)
-            <img class="attachment" src="{{ URL::asset('uploaded_files/'.$result['attachment'])}}" alt="logo">
-        @endif
+        <div class="d-flex gallery_pics_holder">
+            @if($attachment != null)
+                @foreach($attachment as $atta)
+                    <div class="gallery_pics">
+                        <img class="attachment" src="{{ URL::asset('uploaded_files/'.$atta['name'])}}" alt="logo">
+                    </div>
+                @endforeach
+            @endif
+        </div>
+
         <div class="employee employee_background">
             <h4 class="pt-2">Employees</h4>
             <div class="d-flex"> Tom Eykholt <a class="ml-auto" href="#">Add to ticket</a></div>
@@ -39,7 +47,7 @@
 @foreach($logs as $log)
     <h4 class="mt-2">Log</h4>
     <table class="table">
-    
+
         <tr class="thead">
             <th>Date</th>
             <th>created by</th>
@@ -55,5 +63,13 @@
     </table>
 @endforeach
 </div>
+<script>
+    $(document).ready(function() {
+        $('.gallery_pics').click(function(e) {
+            // Change Selector Here
+            $(this).toggleClass('fullscreen');
+        });
+    });
+</script>
 </body>
 </html>
