@@ -1,42 +1,45 @@
 @include("incl/header")
-<h1 class="mt-2">Dashboard</h1>
+<div class="d-flex">
+    <h1 class="mt-2">Dashboard</h1>
 
-<div class="Filter-List">
-    <div class="Filter-Item">
-        <!--Filter-->
-        <label for="Type" class="Filter-Label">
-            Search:
-        </label>
-        <input name="subject" class="Filter-Value" oninput="filterChangedText(this, this.value)"></input>
-    </div>
-    <div class="Filter-Item">
-        <!--Filter-->
-        <label for="Type" class="Filter-Label">
-            Type:
-        </label>
-        <select name="type" class="Filter-Value" onchange="filterChanged(this, this.value)">
-            <!--ToDo fill up with different status types-->
-            <option selected value="None">None</option>
-            <option value="Feature">Feature</option>
-            <option value="Bug">Bug</option>
-            <option value="Reporting error">Reporting error</option>
-            <option value="Change">Change</option>
-        </select>
-    </div>
-    <div class="Filter-Item">
-        <!--Filter-->
-        <label for="Status" class="Filter-Label">
-            Status:
-        </label>
-        <select name="status" class="Filter-Value" onchange="filterChanged(this, this.value)">
-            <!--ToDo fill up with different status types-->
-            <option selected value="None">None</option>
-            <option value="Open">Open</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Closed">Closed</option>
-        </select>
+    <div class="Filter-List ml-auto">
+        <div class="Filter-Item">
+            <!--Filter-->
+            <label for="Type" class="Filter-Label">
+                Search:
+            </label>
+            <input name="subject" class="Filter-Value" oninput="filterChangedText(this, this.value)"></input>
+        </div>
+        <div class="Filter-Item">
+            <!--Filter-->
+            <label for="Type" class="Filter-Label">
+                Type:
+            </label>
+            <select name="type" class="Filter-Value" onchange="filterChanged(this, this.value)">
+                <!--ToDo fill up with different status types-->
+                <option selected value="None">None</option>
+                <option value="Feature">Feature</option>
+                <option value="Bug">Bug</option>
+                <option value="Reporting error">Reporting error</option>
+                <option value="Change">Change</option>
+            </select>
+        </div>
+        <div class="Filter-Item">
+            <!--Filter-->
+            <label for="Status" class="Filter-Label">
+                Status:
+            </label>
+            <select name="status" class="Filter-Value" onchange="filterChanged(this, this.value)">
+                <!--ToDo fill up with different status types-->
+                <option selected value="None">None</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+            </select>
+        </div>
     </div>
 </div>
+
 
 <table id="tickets-table" class="table">
     <tr name="head" class="thead">
@@ -130,7 +133,7 @@
             for (let key in filterOptions) {
                 if (hasName(Cell, filterOptions[key]["name"])) {
                     var Adheres = Cell.textContent.toLowerCase() == filterOptions[key]["value"].toLowerCase() || filterOptions[key]["value"].toLowerCase() == "none" ;
-                    
+
                     if (filterOptions[key]["validationFunction"]) {
                         Adheres = filterOptions[key]["validationFunction"](filterOptions[key]["name"].toLowerCase(), Cell.textContent.toLowerCase(), filterOptions[key]["value"].toLowerCase())
                     }
