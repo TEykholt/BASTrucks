@@ -68,11 +68,12 @@ class TicketController extends Controller
         $ticket->subject = $request->subject;
         $ticket->message = $request->message;
         $ticket->status = "open";
-        $ticket->attachment = $file->getClientOriginalName();
+        if($file != null){
+            $ticket->attachment = $file->getClientOriginalName();
+            $destinationPath = 'uploaded_files';
+            $file->move($destinationPath,$file->getClientOriginalName());
+        }
         $ticket->save();
-
-        $destinationPath = 'uploaded_files';
-        $file->move($destinationPath,$file->getClientOriginalName());
 
         $mailcontroller = new MailController();
         $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
