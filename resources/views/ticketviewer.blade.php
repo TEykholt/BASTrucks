@@ -44,24 +44,21 @@
 @endforeach
 
 <div class="row">
-@foreach($logs as $log)
-    <h4 class="mt-2">Log</h4>
+<h4 class="mt-2">Log</h4>
     <table class="table">
-
-        <tr class="thead">
-            <th>Date</th>
-            <th>created by</th>
-            <th>Message</th>
-        </tr>
-
+    <tr class="thead">
+        <th>Date</th>
+        <th>created by</th>
+        <th>Message</th>
+    </tr>
+@foreach($logs as $log)
         <tr class="trow">
             <td>{{$log['created_at']}}</td>
             <td>{{$log['created_by']}}</td>
             <td>{{$log['message']}}</td>
         </tr>
-
-    </table>
 @endforeach
+    </table>
 </div>
 <script>
     $(document).ready(function() {
