@@ -6,6 +6,7 @@ use App\TicketModel;
 use App\TicketLogModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Mail;
 
 class TicketController extends Controller
@@ -33,6 +34,7 @@ class TicketController extends Controller
 
         return view('dashboard')->with('results' , $data);
     }
+
     function getAllTicketsFromUserDepartment() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
@@ -42,7 +44,6 @@ class TicketController extends Controller
 
         return view('dashboard')->with('results' , $data);
     }
-
 
     function GetSingle(Request $repuest) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
@@ -74,6 +75,12 @@ class TicketController extends Controller
             $file->move($destinationPath,$file->getClientOriginalName());
         }
         $ticket->save();
+
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $ticket->id;
+        $ticketlog->message = "ticket was created by " . auth()->user()->name;
+        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->save();
 
         $mailcontroller = new MailController();
         $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
