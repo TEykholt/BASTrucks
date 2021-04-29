@@ -4,10 +4,31 @@
 <div class="Filter-List">
     <div class="Filter-Item">
         <!--Filter-->
+        <label for="Type" class="Filter-Label">
+            Search:
+        </label>
+        <input name="subject" class="Filter-Value" onchange="filterChangedText(this, this.value)"></input>
+    </div>
+    <div class="Filter-Item">
+        <!--Filter-->
+        <label for="Type" class="Filter-Label">
+            Type:
+        </label>
+        <select name="type" class="Filter-Value" onchange="filterChanged(this, this.value)">
+            <!--ToDo fill up with different status types-->
+            <option selected value="None">None</option>
+            <option value="Feature">Feature</option>
+            <option value="Bug">Bug</option>
+            <option value="Reporting error">Reporting error</option>
+            <option value="Change">Change</option>
+        </select>
+    </div>
+    <div class="Filter-Item">
+        <!--Filter-->
         <label for="Status" class="Filter-Label">
             Status:
         </label>
-        <select class="Filter-Value">
+        <select name="status" class="Filter-Value" onchange="filterChanged(this, this.value)">
             <!--ToDo fill up with different status types-->
             <option selected value="None">None</option>
             <option value="Open">Open</option>
@@ -53,13 +74,13 @@
 </div>
 <script>
     function ToTicketViewer(event) {
-        var TrChildren = event.target.parentNode.children
+        var TrChildren = event.target.parentNode.children;
 
-        var toticketviewerForm = null
+        var toticketviewerForm = null;
         for (let index = 0; index < TrChildren.length; index++) {
             const element = TrChildren[index];
             if (element.nodeName == "FORM") {
-                toticketviewerForm = element
+                toticketviewerForm = element;
                 break;
             }
         }
@@ -68,118 +89,71 @@
         }
     }
 
-    function getFilterItemColumnValue(element) {
-        var FilterItemChildren = element.children;
-        var Item = {};
+    //
+    // Filter
+    //
+    var filterOptions = {};
 
-        for (let j = 0; j < FilterItemChildren.length; j++) {
-            var nodeName = FilterItemChildren[j].nodeName;
-            nodeName = nodeName.toUpperCase();
-            switch (nodeName) {
-                case "SELECT":
-                    var SelectionChildren = FilterItemChildren[j].children;
-                    var ItemValue = null
+    function filterChanged(Element, Value, ValidationFunction) {
+        var Name = Element.getAttribute("name");
+        if (!Name) {
+            return null;
+        }
 
-                    for (let z = 0; z < SelectionChildren.length; z++) {
+        addFilter(Name, Value, ValidationFunction);
+    }
 
-                        if (SelectionChildren[z].nodeName == "OPTION") {
-                            if (SelectionChildren[z].selected) {
+    function filterChangedText(Element, Value) {
+        filterChanged(Element, Value, (CellName, CellValue, FilterValue) => {
 
-                                var Attribute = SelectionChildren[z].attributes.getNamedItem("value")
-                                if (Attribute) {
-                                    Item["value"] = Attribute.value.toLowerCase();
-                                    break;
-                                }
-                            }
-                        }
+            if (FilterValue.trim() == "") {
+                console.log("aW");
+                return true;
+            }
 
+            return CellValue.trim().includes(FilterValue.trim());
+        });
+    }
+    function addFilter(Name, Value, ValidationFunction = null) {
+        var newFilter = {
+            name: Name.toLowerCase(),
+            value: Value.toLowerCase(),
+            validationFunction: ValidationFunction
+        };
+        filterOptions[Name] = newFilter;
+        return newFilter;
+    }
+
+    function adheresToFilter(Row) {
+        var Cells = Row.children
+        var Result = true;
+        for (let index = 0; index < Cells.length; index++) {
+            const Cell = Cells[index];
+            for (let key in filterOptions) {
+                if (hasName(Cell, filterOptions[key]["name"])) {
+                    var Adheres = Cell.textContent.toLowerCase() == filterOptions[key]["value"].toLowerCase() || filterOptions[key]["value"].toLowerCase() == "none" ;
+                    
+                    if (filterOptions[key]["validationFunction"]) {
+                        Adheres = filterOptions[key]["validationFunction"](filterOptions[key]["name"].toLowerCase(), Cell.textContent.toLowerCase(), filterOptions[key]["value"].toLowerCase())
                     }
 
-                    break;
-
-                case "LABEL":
-                    var Attribute = FilterItemChildren[j].attributes.getNamedItem("for")
-                    if (Attribute) {
-                        Item["column"] = Attribute.value.toLowerCase();
-                    }
-                    break;
-            }
-        }
-
-        //Fill up the columns and values
-        return Item;
-    }
-
-    function getFilterList(ListOfElements) {
-        var FilterItems = [];
-
-        for (let i = 0; i < ListOfElements.length; i++) {
-            const element = ListOfElements[i];
-            if (element.className == "Filter-Item") {
-                FilterItems.push(getFilterItemColumnValue(element));
-            }
-        }
-
-        return FilterItems;
-    }
-
-    function hasName(Element, Name) {
-        var NameAttribute = Element.attributes.getNamedItem("name")
-        if (!NameAttribute) {
-            return false;
-        }
-
-        if (!NameAttribute.value.toLowerCase() == Name.toLowerCase()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    function rowAdherestoFilter(rowElement, filterList) {
-        var rowCells = rowElement.children
-        var Adheres = false;
-
-        for (let i = 0; i < rowCells.length; i++) {
-            const Cell = rowCells[i];
-
-            for (let index = 0; index < filterList.length; index++) {
-                const filterItem = filterList[index];
-                if (hasName(Cell, filterItem["column"])) {
-
-                    if ((filterItem["value"].toLowerCase() == "none") || Cell.textContent.toLowerCase() == filterItem["value"].toLowerCase()) {
-                        Adheres = true;
-                        console.log(Adheres);
-                        continue;
+                    if (Adheres) {
+                        //Adheres
+                    } else {
+                        return false;
                     }
                 }
             }
         }
 
-        console.log(Adheres);
-        return Adheres;
+        return Result;
+    }
+
+    function hasName(Element, Name) {
+        return (Element.getAttribute("name") == Name);
     }
 
     function filterTickets(event) {
-        var FilterButton, FilterList, FilterListItems;
-        FilterButton = event.target;
-        if (!FilterButton) {
-            console.error("Filter-Button was not defined");
-            return null;
-        }
-        FilterList = FilterButton.parentNode
-
-        if (!FilterList) {
-            console.error("Filter-List was not defined");
-            return null;
-        }
-        if (!FilterList.className == "Filter-List") {
-            console.error("Filter-List was not defined");
-            return null;
-        }
-
-        var FilterItems = getFilterList(FilterList.children);
-
         // Debug: Print the filter variables
         // for (let index = 0; index < FilterItems.length; index++) {
         //     const element = FilterItems[index];
@@ -196,14 +170,13 @@
         var TableBody = Table.firstElementChild;
         var TableRows = TableBody.getElementsByClassName("trow");
         for (let index = 0; index < TableRows.length; index++) {
-            const row = TableRows[index];
-            var RowAdherestToFilter = rowAdherestoFilter(row, FilterItems);
-            //console.log(RowAdherestToFilter);
+            const Row = TableRows[index];
+
+            var RowAdherestToFilter = adheresToFilter(Row);
             if (!RowAdherestToFilter) {
-                row.setAttribute("hidden", "");
+                Row.setAttribute("hidden", "");
             } else {
-                //console.log("remove");
-                row.removeAttribute("hidden");
+                Row.removeAttribute("hidden");
             }
         }
     }
