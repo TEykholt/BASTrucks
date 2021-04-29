@@ -15,9 +15,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [\App\Http\Controllers\TicketController::class, 'getAllTicketsFromUser']);
 
 Route::post('/ticketInput/addTicket', [\App\Http\Controllers\TicketController::class, 'addTicket']);
-Route::get('/ticketInput', function(){
-    return view("ticketInput");
-});
+Route::get('/ticketInput', [\App\Http\Controllers\TicketController::class, 'loadTicketInput']);
+
 Route::get('/closeTicket/{id}', 'TicketController@closeTicket');
 
 Route::get('/kpi', [\App\Http\Controllers\kpiController::class, 'GetAllKPIs']);
