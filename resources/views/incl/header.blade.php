@@ -36,13 +36,18 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{url('/')}}">Dashboard</a>
+                    <a class="nav-link" href="{{url('/')}}">My Submitted tickets</a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('/ticketInput')}}">Ticket invoer</a>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url('/')}}">Assined tickets</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url('/')}}">All tickets</a>
                 </li>
             </ul>
+            <div class="ml-auto">
+                <a class="nav-link  btn btn-secondary" href="{{url('/ticketInput')}}">Ticket invoer</a>
+            </div>
         </div>
     </div>
 </nav>
