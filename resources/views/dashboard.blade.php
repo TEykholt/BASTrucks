@@ -7,7 +7,7 @@
         <label for="Type" class="Filter-Label">
             Search:
         </label>
-        <input name="subject" class="Filter-Value" onchange="filterChangedText(this, this.value)"></input>
+        <input name="subject" class="Filter-Value" oninput="filterChangedText(this, this.value)"></input>
     </div>
     <div class="Filter-Item">
         <!--Filter-->
@@ -35,9 +35,6 @@
             <option value="In Progress">In Progress</option>
             <option value="Closed">Closed</option>
         </select>
-    </div>
-    <div class="Filter-Button" onclick="filterTickets(event)">
-        Filter
     </div>
 </div>
 
@@ -101,6 +98,7 @@
         }
 
         addFilter(Name, Value, ValidationFunction);
+        filterTickets();
     }
 
     function filterChangedText(Element, Value) {
@@ -153,7 +151,7 @@
         return (Element.getAttribute("name") == Name);
     }
 
-    function filterTickets(event) {
+    function filterTickets() {
         // Debug: Print the filter variables
         // for (let index = 0; index < FilterItems.length; index++) {
         //     const element = FilterItems[index];
