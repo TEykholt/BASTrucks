@@ -46,7 +46,7 @@
                 </li>
             </ul>
             <div class="ml-auto">
-                <a class="nav-link  btn btn-secondary" href="{{url('/ticketInput')}}">Ticket invoer</a>
+                <a class="nav-link  btn btn-secondary" href="{{url('/ticketInput')}}">Submit ticket</a>
             </div>
         </div>
     </div>
