@@ -94,6 +94,12 @@ class TicketController extends Controller
 
         $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->where('support_ticket.id', $id)->first();
 
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $id;
+        $ticketlog->message = "ticket was closed by " . auth()->user()->name;
+        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->save();
+
         $mailcontroller = new MailController();
         $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket.",  $ticket->email);
 
