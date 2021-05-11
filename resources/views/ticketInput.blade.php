@@ -2,36 +2,19 @@
 <h1>Insert Ticket</h1>
         <form method="POST" id="input_form" action="/ticketInput/addTicket" enctype="multipart/form-data">
             @csrf
-
-            <?php
-                $results = array(
-                    array(
-                        "id" => 1,
-                        "name" => "ICT",
-                    )
-                );
-
-                $TicketTypes = array(
-                    "Feature",
-                    "Bug",
-                    "Change",
-                    "Reporting error"
-                );
-            ?>
-
             <div class="form-group">
                 <label for="ticket_type">Type</label>
                 <select id="ticket_type" class="form-control" name="ticket_type" id="ticket_type">
-                    @foreach($TicketTypes as $type)
-                        <option value="{{$type}}">{{$type}}</option>
+                    @foreach($types as $type)
+                        <option value="{{$type['name']}}">{{$type['name']}}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
                 <label for="department_id">Department</label>
                 <select id="department_id" class="form-control" name="department_id" id="Department">
-                    @foreach($results as $result)
-                        <option value="{{$result['id']}}">{{$result['name']}}</option>
+                    @foreach($departments as $department)
+                        <option value="{{$department['id']}}">{{$department['name']}}</option>
                     @endforeach
                 </select>
             </div>

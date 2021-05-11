@@ -6,7 +6,9 @@
             <h1 class="mt-2">Ticket - {{$result['id']}}</h1>
             <select class="form-control mb-4 w-25">
                 <option selected value="{{$result['type']}}">{{$result['type']}}</option>
-                <option value="Bug">Bug</option>
+                @foreach($types as $type)
+                    <option value="{{$type['name']}}">{{$type['name']}}</option>
+                @endforeach
             </select>
         </div>
         <div class="col-lg-6 d-flex">

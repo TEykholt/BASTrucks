@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\attachmentModel;
+use App\departmentModel;
 use App\TicketModel;
 use App\TicketLogModel;
+use App\ticketTypes;
+use App\statusModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -23,7 +26,9 @@ class TicketController extends Controller
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->get();
 
-        return view('dashboard')->with('results' , $data);
+        $status = statusModel::get();
+        $types = ticketTypes::get();
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
     }
 
     function getAllTicketsFromUser() {
@@ -33,7 +38,9 @@ class TicketController extends Controller
             ->where('support_ticket.person_id', auth()->user()->id)
             ->get();
 
-        return view('dashboard')->with('results' , $data);
+        $status = statusModel::get();
+        $types = ticketTypes::get();
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
     }
 
     function getAllTicketsFromUserDepartment() {
@@ -43,7 +50,9 @@ class TicketController extends Controller
             ->where('department.name', 'ICT')
             ->get();
 
-        return view('dashboard')->with('results' , $data);
+        $status = statusModel::get();
+        $types = ticketTypes::get();
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
     }
 
     function GetSingle(Request $repuest) {
@@ -60,7 +69,12 @@ class TicketController extends Controller
             ->where('ticket_id', $repuest->id)
             ->get();
 
-        return view("ticketviewer")->with('results' , $data)->with('logs' , $logs)->with('attachment', $attachment);
+        $status = statusModel::get();
+        foreach($data as $dataRow){
+            $types = ticketTypes::where('name', '!=', $dataRow['type'])->get();
+        }
+
+        return view("ticketviewer")->with('results' , $data)->with('logs' , $logs)->with('attachment', $attachment)->with('types', $types)->with('statuses', $status);;
     }
 
     function addTicket(Request $request){
@@ -119,6 +133,8 @@ class TicketController extends Controller
     }
 
     function loadTicketInput(){
-        return view("ticketInput");
+        $types = ticketTypes::get();
+        $department =departmentModel::get();
+        return view("ticketInput")->with('types', $types)->with('departments', $department);
     }
 }

@@ -16,12 +16,10 @@
                 Type:
             </label>
             <select name="type" class="Filter-Value" onchange="filterChanged(this, this.value)">
-                <!--ToDo fill up with different status types-->
                 <option selected value="None">None</option>
-                <option value="Feature">Feature</option>
-                <option value="Bug">Bug</option>
-                <option value="Reporting error">Reporting error</option>
-                <option value="Change">Change</option>
+                @foreach($types as $type)
+                    <option value="{{$type['name']}}">{{$type['name']}}</option>
+                @endforeach
             </select>
         </div>
         <div class="Filter-Item">
@@ -32,9 +30,9 @@
             <select name="status" class="Filter-Value" onchange="filterChanged(this, this.value)">
                 <!--ToDo fill up with different status types-->
                 <option selected value="None">None</option>
-                <option value="Open">Open</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Closed">Closed</option>
+                @foreach($statuses as $status)
+                    <option value="{{$status['status']}}">{{$status['status']}}</option>
+                @endforeach
             </select>
         </div>
     </div>
