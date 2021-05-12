@@ -1,6 +1,4 @@
 @include("incl/header")
-@foreach($results as $result)
-
     <div class="row">
         <div class="col-lg-6">
             <h1 class="mt-2">Ticket - {{$result['id']}}</h1>
@@ -43,7 +41,6 @@
         </div>
     </div>
 </div>
-@endforeach
 
 <div class="row">
 <h4 class="mt-2">Log</h4>
