@@ -17,6 +17,23 @@
                 <option value="person_name">Ticket holder</option>
             </select>
         </div>
+        @if (isset($departments))
+            @if (count($departments) > 0) 
+                <div class="Filter-Item">
+                    <!--Filter-->
+                    <label for="department_name" class="Filter-Label">
+                        expertise:
+                    </label>
+                    <select name="department_name" class="Filter-Value" onchange="filterChanged(this, this.value)">
+                        <option selected value="None">None</option>
+                            @foreach($departments as $department)
+                                <option value="{{$department['name']}}">{{$department['name']}}</option>
+                            @endforeach
+                    </select>
+                </div>
+            @endif
+        @endif
+
         <div class="Filter-Item">
             <!--Filter-->
             <label for="Type" class="Filter-Label">

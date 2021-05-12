@@ -23,6 +23,7 @@ class TicketController extends Controller
     }
 
     function loadDashboard(Request $repuest) {
+        //ToDo: implement permissions
         switch ($repuest->dashType) {
             case 'myTickets':
                 return $this->getTicketsFromUser();
@@ -54,7 +55,9 @@ class TicketController extends Controller
 
         $status = statusModel::get();
         $types = ticketTypes::get();
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
+        $departments = departmentModel::get();
+
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments);
     }
 
     function getTicketsFromUser() {
@@ -66,7 +69,9 @@ class TicketController extends Controller
 
         $status = statusModel::get();
         $types = ticketTypes::get();
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
+        $departments = departmentModel::get();
+
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments);
     }
 
     function getAssignedTicketsFromUser() {
@@ -84,11 +89,12 @@ class TicketController extends Controller
             }
 
         }
-        //dd($AssignedTickets);
+
         $status = statusModel::get();
         $types = ticketTypes::get();
+        $departments = departmentModel::get();
 
-        return view('dashboard')->with('results' , $AssignedTickets)->with('types', $types)->with('statuses', $status);
+        return view('dashboard')->with('results' , $AssignedTickets)->with('types', $types)->with('statuses', $status)->with('departments', $departments);
     }
 
     function getTicketsFromUserDepartment() {
@@ -100,6 +106,8 @@ class TicketController extends Controller
 
         $status = statusModel::get();
         $types = ticketTypes::get();
+        $departments = departmentModel::get();
+
         return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
     }
 
@@ -205,7 +213,7 @@ class TicketController extends Controller
 
     function loadTicketInput(){
         $types = ticketTypes::get();
-        $department =departmentModel::get();
+        $department = departmentModel::get();
         return view("ticketInput")->with('types', $types)->with('departments', $department);
     }
 }
