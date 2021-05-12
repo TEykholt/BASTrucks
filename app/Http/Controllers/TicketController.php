@@ -80,7 +80,7 @@ class TicketController extends Controller
             $Ticket_Person = $Ticket_Persons[$i];
 
             if (strtolower($Ticket_Person->status) == "assigned") {
-                array_push($AssignedTickets, $this->GetSingle($Ticket_Person->ticket_id, true)->ticket[0]);
+                array_push($AssignedTickets, $this->GetSingle($Ticket_Person->ticket_id, true)->ticket);
             }
 
         }
@@ -121,24 +121,31 @@ class TicketController extends Controller
                 ->get();
         }
 
-        $returnInformation = (object)[        
-            'ticket' => $data,
-            'attachments' => $attachment,
-            'logs' => $logs
-        ];
-
-        return $returnInformation;
+        if (count($data) > 0) {
+            return (object)[        
+                'ticket' => $data[0],
+                'attachments' => $attachment,
+                'logs' => $logs
+            ];
+        }
+        else {
+            return null;
+        }
    }
 
    function getTicketViewer(Request $request) {
         $TicketInformation = $this->GetSingle($request->id, false);
 
-        $status = statusModel::get();
-        foreach($data as $dataRow){
-            $types = ticketTypes::where('name', '!=', $dataRow['type'])->get();
+        if ($TicketInformation) {
+            $status = statusModel::get();
+            
+            $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
+    
+            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->logs)->with('types', $types)->with('statuses', $status);;    
         }
-        dd($TicketInformation);
-        return view("ticketviewer")->with('results' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->logs)->with('types', $types)->with('statuses', $status);;
+        else {
+            $this->loadDashboard();
+        }
 
    }
     function addTicket(Request $request){
