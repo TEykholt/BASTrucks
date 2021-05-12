@@ -9,12 +9,17 @@ use App\ticketTypes;
 
 class TicketTypeController extends Controller
 {
+    
 
     //views
     function index()
     {
         $types = ticketTypes::all();
         return view("tickettypes/ticketTypes")->with('types', $types);
+    }
+
+    function create(){
+        return view("tickettypes/ticketTypesCreate");
     }
 
     function edit($id){

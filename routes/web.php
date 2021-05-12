@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', [\App\Http\Controllers\TicketController::class, 'loadDashboard']);
+
+Route::get('/ticketType/create', 'TicketTypeController@index');
 Route::get('/ticketType', 'TicketTypeController@index');
+Route::get('/ticketType/{id}', 'TicketTypeController@edit');
 
 Route::post('/ticketInput/addTicket', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::get('/ticketInput', [\App\Http\Controllers\TicketController::class, 'loadTicketInput']);
