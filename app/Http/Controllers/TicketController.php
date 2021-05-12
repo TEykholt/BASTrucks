@@ -8,6 +8,8 @@ use App\TicketModel;
 use App\TicketLogModel;
 use App\ticketTypes;
 use App\statusModel;
+use App\TicketPersonModel;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -18,6 +20,30 @@ class TicketController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    function loadDashboard(Request $repuest) {
+        switch ($repuest->dashType) {
+            case 'myTickets':
+                return $this->getTicketsFromUser();
+                break;
+
+            case 'myAssigned':
+                return $this->getAssignedTicketsFromUser();
+                break;
+
+            case 'myDepartment':
+                return $this->getTicketsFromUserDepartment();
+                break;    
+
+            case 'allTickets':
+                return $this->getAllTickets();
+                break; 
+
+            default:
+                return $this->getTicketsFromUser();
+                break;
+        }
     }
 
     function getAllTickets(){
@@ -31,7 +57,7 @@ class TicketController extends Controller
         return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
     }
 
-    function getAllTicketsFromUser() {
+    function getTicketsFromUser() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
@@ -43,11 +69,33 @@ class TicketController extends Controller
         return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
     }
 
-    function getAllTicketsFromUserDepartment() {
+    function getAssignedTicketsFromUser() {
+
+        $Ticket_Persons = TicketPersonModel::select('ticket_person.id', 'ticket_person.status', 'ticket_person.ticket_id')
+            ->where('ticket_person.person_id', auth()->user()->id)
+            ->get();
+
+        $AssignedTickets = array();
+        for ($i=0; $i < count($Ticket_Persons); $i++) { 
+            $Ticket_Person = $Ticket_Persons[$i];
+
+            if (strtolower($Ticket_Person->status) == "assigned") {
+                array_push($AssignedTickets, $this->GetSingle($Ticket_Person->ticket_id, true)->ticket[0]);
+            }
+
+        }
+        //dd($AssignedTickets);
+        $status = statusModel::get();
+        $types = ticketTypes::get();
+
+        return view('dashboard')->with('results' , $AssignedTickets)->with('types', $types)->with('statuses', $status);
+    }
+
+    function getTicketsFromUserDepartment() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
-            ->where('department.name', 'ICT')
+            ->where('department.id', auth()->user()->department_id)
             ->get();
 
         $status = statusModel::get();
@@ -55,28 +103,44 @@ class TicketController extends Controller
         return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
     }
 
-    function GetSingle(Request $repuest) {
+    function GetSingle($Ticket_id, $TicketOnly) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
-            ->where('support_ticket.id', $repuest->id)
+            ->where('support_ticket.id', $Ticket_id)
             ->get();
 
-        $attachment = attachmentModel::where('ticket_id', $repuest->id)
-            ->get();
+        $attachment = null; $logs = null;
 
-        $logs = TicketLogModel::select("message","created_at","created_by")
-            ->where('ticket_id', $repuest->id)
-            ->get();
+        if (!$TicketOnly) {
+            $attachment = attachmentModel::where('ticket_id', $Ticket_id)
+                ->get();
+
+            $logs = TicketLogModel::select("message","created_at","created_by")
+                ->where('ticket_id', $Ticket_id)
+                ->get();
+        }
+
+        $returnInformation = (object)[        
+            'ticket' => $data,
+            'attachments' => $attachment,
+            'logs' => $logs
+        ];
+
+        return $returnInformation;
+   }
+
+   function getTicketViewer(Request $request) {
+        $TicketInformation = $this->GetSingle($request->id, false);
 
         $status = statusModel::get();
         foreach($data as $dataRow){
             $types = ticketTypes::where('name', '!=', $dataRow['type'])->get();
         }
+        dd($TicketInformation);
+        return view("ticketviewer")->with('results' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->logs)->with('types', $types)->with('statuses', $status);;
 
-        return view("ticketviewer")->with('results' , $data)->with('logs' , $logs)->with('attachment', $attachment)->with('types', $types)->with('statuses', $status);;
-    }
-
+   }
     function addTicket(Request $request){
         $request->except('_token');
         $files = $request->file("Attachments");

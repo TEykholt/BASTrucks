@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', [\App\Http\Controllers\TicketController::class, 'getAllTicketsFromUser']);
+Route::get('/', [\App\Http\Controllers\TicketController::class, 'loadDashboard']);
 
 Route::post('/ticketInput/addTicket', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::get('/ticketInput', [\App\Http\Controllers\TicketController::class, 'loadTicketInput']);
@@ -27,7 +27,7 @@ Route::get('/Feedback', function() {
 Route::get('/feedback/new', [\App\Http\Controllers\FeedbackController::class, 'addFeedback']);
 
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
-Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'GetSingle']);
+Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);
 
 Auth::routes();
 
