@@ -25,10 +25,8 @@ Route::get('/closeTicket/{id}', 'TicketController@closeTicket');
 
 Route::get('/kpi', [\App\Http\Controllers\kpiController::class, 'GetAllKPIs']);
 
-Route::get('/Feedback', function() {
-    return view("Feedback");
-});
-Route::get('/feedback/new', [\App\Http\Controllers\FeedbackController::class, 'addFeedback']);
+Route::get('/Feedback/{id}','FeedbackController@load_ticket_feedback' );
+Route::post('/Feedback/new', [\App\Http\Controllers\FeedbackController::class, 'addFeedback']);
 
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);
