@@ -12,7 +12,11 @@
         </div>
         <div class="col-lg-6 d-flex">
             <div class="ml-auto">
-                <a href="{{ url('/closeTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Close Ticket</a>
+                @if($result['status'] == 'closed')
+                    <a href="{{ url('/openTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Open Ticket</a>
+                @else
+                    <a href="{{ url('/closeTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Close Ticket</a>
+                @endif
             </div>
         </div>
     </div>

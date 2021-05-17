@@ -29,19 +29,19 @@ class TicketController extends Controller
                 case 'myTickets':
                     return $this->getTicketsFromUser();
                     break;
-    
+
                 case 'myAssigned':
                     return $this->getAssignedTicketsFromUser();
                     break;
-    
+
                 case 'myDepartment':
                     return $this->getTicketsFromUserDepartment();
-                    break;    
-    
+                    break;
+
                 case 'allTickets':
                     return $this->getAllTickets();
-                    break; 
-    
+                    break;
+
                 default:
                     return $this->getTicketsFromUser();
                     break;
@@ -84,7 +84,7 @@ class TicketController extends Controller
             ->get();
 
         $AssignedTickets = array();
-        for ($i=0; $i < count($Ticket_Persons); $i++) { 
+        for ($i=0; $i < count($Ticket_Persons); $i++) {
             $Ticket_Person = $Ticket_Persons[$i];
 
             if (strtolower($Ticket_Person->status) == "assigned") {
@@ -133,7 +133,7 @@ class TicketController extends Controller
         }
 
         if (count($data) > 0) {
-            return (object)[        
+            return (object)[
                 'ticket' => $data[0],
                 'attachments' => $attachment,
                 'logs' => $logs
@@ -151,10 +151,10 @@ class TicketController extends Controller
 
         if ($TicketInformation) {
             $status = statusModel::get();
-            
+
             $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
-    
-            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->logs)->with('types', $types)->with('statuses', $status);;    
+
+            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->logs)->with('types', $types)->with('statuses', $status);;
         }
         else {
             $this->loadDashboard(new Request());
@@ -212,6 +212,21 @@ class TicketController extends Controller
 
         $mailcontroller = new MailController();
         $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket.",  $ticket->email);
+
+        return $this->loadDashboard(new Request());
+    }
+
+    function openTicket($id){
+        TicketModel::where('id', $id)
+            ->update(['status' => "open", "updated_at" => Carbon::now()]);
+
+        $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->where('support_ticket.id', $id)->first();
+
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $id;
+        $ticketlog->message = "ticket was reopend by " . auth()->user()->name;
+        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->save();
 
         return $this->loadDashboard(new Request());
     }
