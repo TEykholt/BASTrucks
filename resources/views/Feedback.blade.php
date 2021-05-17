@@ -23,7 +23,7 @@
             <option value="9">9</option>
             <option value="10">10</option>
         </select>
-        <Input value="{{$ticket_id}}" Name="ticket_id"></Input>
+        <Input value="{{$ticket_id}}" Name="ticket_id" hidden></Input>
         <Button type='submit' name='SubmitFeedback'> Submit </Button>
         </form>
     </div>
