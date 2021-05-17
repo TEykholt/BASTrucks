@@ -22,6 +22,8 @@ Route::post('/ticketInput/addTicket', [\App\Http\Controllers\TicketController::c
 Route::get('/ticketInput', [\App\Http\Controllers\TicketController::class, 'loadTicketInput']);
 
 Route::get('/closeTicket/{id}', 'TicketController@closeTicket');
+Route::get('/openTicket/{id}', 'TicketController@openTicket');
+
 
 Route::get('/kpi', [\App\Http\Controllers\kpiController::class, 'GetAllKPIs']);
 
