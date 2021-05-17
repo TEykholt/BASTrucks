@@ -1,4 +1,5 @@
 @include("incl/header")
+
     <div class="row">
         <div class="col-lg-6">
             <h1 class="mt-2">Ticket - {{$result['id']}}</h1>
