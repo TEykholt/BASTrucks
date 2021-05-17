@@ -155,7 +155,7 @@ class TicketController extends Controller
             return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->logs)->with('types', $types)->with('statuses', $status);;    
         }
         else {
-            $this->loadDashboard();
+            $this->loadDashboard($request);
         }
 
    }
@@ -193,7 +193,7 @@ class TicketController extends Controller
         $mailcontroller = new MailController();
         $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
 
-        return $this->loadDashboard();
+        return $this->loadDashboard($request);
     }
 
     function closeTicket($id){
@@ -211,7 +211,7 @@ class TicketController extends Controller
         $mailcontroller = new MailController();
         $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket.",  $ticket->email);
 
-        return $this->loadDashboard();
+        return $this->loadDashboard($request);
     }
 
     function loadTicketInput(){
