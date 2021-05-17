@@ -24,30 +24,27 @@ class TicketController extends Controller
 
     function loadDashboard(Request $repuest) {
         //ToDo: implement permissions
-        if ( $repuest) {
-            switch ($repuest->dashType) {
-                case 'myTickets':
-                    return $this->getTicketsFromUser();
-                    break;
-    
-                case 'myAssigned':
-                    return $this->getAssignedTicketsFromUser();
-                    break;
-    
-                case 'myDepartment':
-                    return $this->getTicketsFromUserDepartment();
-                    break;    
-    
-                case 'allTickets':
-                    return $this->getAllTickets();
-                    break; 
-    
-                default:
-                    return $this->getTicketsFromUser();
-                    break;
-            }
+        switch ($repuest->dashType) {
+            case 'myTickets':
+                return $this->getTicketsFromUser();
+                break;
+
+            case 'myAssigned':
+                return $this->getAssignedTicketsFromUser();
+                break;
+
+            case 'myDepartment':
+                return $this->getTicketsFromUserDepartment();
+                break;    
+
+            case 'allTickets':
+                return $this->getAllTickets();
+                break; 
+
+            default:
+                return $this->getTicketsFromUser();
+                break;
         }
-        return $this->getTicketsFromUser();
     }
 
     function getAllTickets(){
@@ -211,7 +208,7 @@ class TicketController extends Controller
         $ticketlog->save();
 
         $mailcontroller = new MailController();
-        $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket.",  $ticket->email);
+        $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/new?id=".$ticket->id,  $ticket->email);
 
         return $this->loadDashboard(new Request());
     }
