@@ -19,13 +19,43 @@ class TicketPersonController extends Controller
         $ticketperson = new TicketPersonModel;
         $ticketperson->person_id = $request->person_id;
         $ticketperson->ticket_id = $request->ticket_id;
-        $ticketperson->status = "assigned";
+        $ticketperson->status = "open";
         $ticketperson->save();
+    }
+
+    function TicketPersonAssign(Request $request)
+    {
+        TicketPersonModel::where('status', $request->status);
+        if(['status' == "unassigned"])
+        {
+            TicketPersonUpdate($request);
+        }
+        if(['status' == "open"])
+        {
+            TicketPersonAdd($request);
+        }
+    }
+
+    function TicketPersonAdd(Request $request)
+    {
+        TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
+        ->update(['status' => "assigned"]);
+    }
+
+    function TicketPersonUpdate(Request $request)
+    {
+        TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
+        ->update(['status' => "reassigned"]);
     }
 
     function TicketPersonRemove(Request $request)
     {
         TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
         ->update(['status' => "unassigned"]);
+    }
+
+    function GetTickets(Request $request)
+    {
+        TicketPersonModel::where('ticket_id', $request->ticket_id)->get();
     }
 }
