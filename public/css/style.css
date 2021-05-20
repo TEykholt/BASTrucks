@@ -62,7 +62,6 @@ body{
 }
 
 .Filter-List {
-    float: right;
     height: auto;
     width: auto;
     padding: 0.375rem 0.75rem;
@@ -90,11 +89,20 @@ body{
     color: #495057;
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #ced4da;
+    border: 1px solid rgba(122, 122, 122, 0.52);
     border-radius: 0.25rem;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-
+.items{
+    border: 1px solid rgba(122, 122, 122, 0.52);
+    padding: 1px;
+    color: #495057;
+    background-color: #fff;
+    border-radius: 0.25rem;
+}
+.items .Filter-Item{
+    border: none;
+}
 .Filter-Button {
     display: inline-block;
     text-align: center;

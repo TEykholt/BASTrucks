@@ -1,36 +1,39 @@
 @include("incl/header")
 <div class="d-flex pt-3 pb-3">
-    <h1 class="mt-2">Dashboard</h1>
-
+    <h1 class="mt-4 align-middle">Dashboard</h1>
     <div class="Filter-List ml-auto">
-        <div class="Filter-Item">
+        <div class="filter-item-big mb-2 d-flex">
+            <div class="Filter-Item ml-auto">
             <!--Filter-->
-            <label class="Filter-Label">
-                Search:
-            </label>
-            <input name="subject" class="Filter-Value" oninput="filterChangedText(this, this.value)"></input>
-            <label class="Filter-Label">
-                On:
-            </label>
-            <select class="Filter-Value" onchange="changeFilterName(this, this.value, this.parentNode.getElementsByTagName('INPUT')[0], filterChangedText)">
-                <option selected value="subject">Subject</option>
-                <option value="person_name">Ticket holder</option>
-            </select>
+                <label class="Filter-Label">
+                    Search:
+                </label>
+                <input name="subject" class="Filter-Value" oninput="filterChangedText(this, this.value)"></input>
+                <label class="Filter-Label">
+                    On:
+                </label>
+                <select class="Filter-Value" onchange="changeFilterName(this, this.value, this.parentNode.getElementsByTagName('INPUT')[0], filterChangedText)">
+                    <option selected value="subject">Subject</option>
+                    <option value="person_name">Ticket holder</option>
+                </select>
+            </div>
         </div>
+        <div class="items">
         @if (isset($departments))
-            @if (count($departments) > 0) 
-                <div class="Filter-Item">
-                    <!--Filter-->
-                    <label for="department_name" class="Filter-Label">
-                        department:
-                    </label>
-                    <select name="department_name" class="Filter-Value" onchange="filterChanged(this, this.value)">
-                        <option selected value="None">None</option>
-                            @foreach($departments as $department)
-                                <option value="{{$department['name']}}">{{$department['name']}}</option>
-                            @endforeach
-                    </select>
-                </div>
+            @if (count($departments) > 0)
+
+                     <div class="Filter-Item">
+                         <!--Filter-->
+                         <label for="department_name" class="Filter-Label">
+                             department:
+                         </label>
+                         <select name="department_name" class="Filter-Value" onchange="filterChanged(this, this.value)">
+                             <option selected value="None">None</option>
+                                 @foreach($departments as $department)
+                                     <option value="{{$department['name']}}">{{$department['name']}}</option>
+                                 @endforeach
+                         </select>
+                     </div>
             @endif
         @endif
 
@@ -58,6 +61,7 @@
                     <option value="{{$status['status']}}">{{$status['status']}}</option>
                 @endforeach
             </select>
+        </div>
         </div>
     </div>
 </div>
@@ -208,7 +212,7 @@
         if (!Table) {
             return null;
         }
-        
+
         var TableBody = Table.firstElementChild;
         var TableRows = TableBody.getElementsByClassName("trow");
         for (let index = 0; index < TableRows.length; index++) {
