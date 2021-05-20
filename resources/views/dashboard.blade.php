@@ -22,7 +22,7 @@
                 <div class="Filter-Item">
                     <!--Filter-->
                     <label for="department_name" class="Filter-Label">
-                        expertise:
+                        department:
                     </label>
                     <select name="department_name" class="Filter-Value" onchange="filterChanged(this, this.value)">
                         <option selected value="None">None</option>
@@ -70,7 +70,7 @@
         <th>type</th>
         <th>subject</th>
         <th>message</th>
-        <th>expertise</th>
+        <th>department</th>
         <th>status</th>
     </tr>
 
