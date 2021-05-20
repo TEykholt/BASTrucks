@@ -5,11 +5,35 @@
     <div class="Filter-List ml-auto">
         <div class="Filter-Item">
             <!--Filter-->
-            <label for="Type" class="Filter-Label">
+            <label class="Filter-Label">
                 Search:
             </label>
             <input name="subject" class="Filter-Value" oninput="filterChangedText(this, this.value)"></input>
+            <label class="Filter-Label">
+                On:
+            </label>
+            <select class="Filter-Value" onchange="changeFilterName(this, this.value, this.parentNode.getElementsByTagName('INPUT')[0], filterChangedText)">
+                <option selected value="subject">Subject</option>
+                <option value="person_name">Ticket holder</option>
+            </select>
         </div>
+        @if (isset($departments))
+            @if (count($departments) > 0) 
+                <div class="Filter-Item">
+                    <!--Filter-->
+                    <label for="department_name" class="Filter-Label">
+                        expertise:
+                    </label>
+                    <select name="department_name" class="Filter-Value" onchange="filterChanged(this, this.value)">
+                        <option selected value="None">None</option>
+                            @foreach($departments as $department)
+                                <option value="{{$department['name']}}">{{$department['name']}}</option>
+                            @endforeach
+                    </select>
+                </div>
+            @endif
+        @endif
+
         <div class="Filter-Item">
             <!--Filter-->
             <label for="Type" class="Filter-Label">
@@ -91,6 +115,15 @@
     // Filter
     //
     var filterOptions = {};
+    function changeFilterName(Element, newValue, ToChangeElement, filterUpdateFunction){
+        if (ToChangeElement) {
+            removeFilter(ToChangeElement.getAttribute("name"));
+            ToChangeElement.setAttribute("name", newValue);
+            if (filterUpdateFunction) {
+                filterUpdateFunction(ToChangeElement, ToChangeElement.value);
+            }
+        }
+    }
 
     function filterChanged(Element, Value, ValidationFunction) {
         var Name = Element.getAttribute("name");
@@ -98,15 +131,20 @@
             return null;
         }
 
-        addFilter(Name, Value, ValidationFunction);
+        ColumnNames = Name.split("/")
+        for (let index = 0; index < ColumnNames.length; index++) {
+            const Col = ColumnNames[index];
+            addFilter(Col, Value, ValidationFunction);
+        }
         filterTickets();
     }
 
     function filterChangedText(Element, Value) {
         filterChanged(Element, Value, (CellName, CellValue, FilterValue) => {
-
+            if (FilterValue == null) {
+                return true;
+            }
             if (FilterValue.trim() == "") {
-                console.log("aW");
                 return true;
             }
 
@@ -121,6 +159,11 @@
         };
         filterOptions[Name] = newFilter;
         return newFilter;
+    }
+    function removeFilter(Name) {
+        if (filterOptions[Name]) {
+            delete filterOptions[Name];
+        }
     }
 
     function adheresToFilter(Row) {
@@ -165,7 +208,7 @@
         if (!Table) {
             return null;
         }
-
+        
         var TableBody = Table.firstElementChild;
         var TableRows = TableBody.getElementsByClassName("trow");
         for (let index = 0; index < TableRows.length; index++) {

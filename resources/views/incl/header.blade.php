@@ -39,10 +39,13 @@
                     <a class="nav-link" href="{{url('/')}}">My Submitted tickets</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{url('/')}}">Assined tickets</a>
+                    <a class="nav-link" href="{{url('/?dashType=myDepartment')}}">My Department tickets</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{url('/')}}">All tickets</a>
+                    <a class="nav-link" href="{{url('/?dashType=myAssigned')}}">Assigned tickets</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url('/?dashType=allTickets')}}">All tickets</a>
                 </li>
             </ul>
             <div class="ml-auto">
