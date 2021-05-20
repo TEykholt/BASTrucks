@@ -30,6 +30,8 @@ Route::get('/kpi', [\App\Http\Controllers\kpiController::class, 'GetAllKPIs']);
 Route::get('/Feedback/{id}','FeedbackController@load_ticket_feedback' );
 Route::post('/Feedback/new', [\App\Http\Controllers\FeedbackController::class, 'addFeedback']);
 
+Route::post('/updateTicket', [\App\Http\Controllers\TicketController::class, 'updateTicket']);
+
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);
 

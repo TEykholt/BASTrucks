@@ -2,8 +2,9 @@
 
     <div class="row">
         <div class="col-lg-6">
+            <p id="id" hidden>{{$result['id']}}</p>
             <h1 class="mt-2">Ticket - {{$result['id']}}</h1>
-            <select class="form-control mb-4 w-25">
+            <select onchange="updateTicket()" id="type" class="form-control mb-4 w-25">
                 <option selected value="{{$result['type']}}">{{$result['type']}}</option>
                 @foreach($types as $type)
                     <option value="{{$type['name']}}">{{$type['name']}}</option>
@@ -65,6 +66,21 @@
     </table>
 </div>
 <script>
+    function updateTicket() {
+        var data = {type: $('#type').val(), id : $('#id').html()}
+        console.log(data);
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            dataType : 'json',
+            url: "/updateTicket",
+            data: data,
+        })
+    }
+
     $(document).ready(function() {
         $('.gallery_pics').click(function(e) {
             // Change Selector Here

@@ -153,7 +153,7 @@ class TicketController extends Controller
 
             $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
 
-            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->logs)->with('types', $types)->with('statuses', $status);;
+            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
         }
         else {
             $this->loadDashboard(new Request());
@@ -234,5 +234,13 @@ class TicketController extends Controller
         $types = ticketTypes::get();
         $department = departmentModel::get();
         return view("ticketInput")->with('types', $types)->with('departments', $department);
+    }
+
+    function updateTicket(Request $request){
+        $id=$request->id;
+        $type=$request->type;
+
+        TicketModel::where('id', $id)
+            ->update(['type' => $type, "updated_at" => Carbon::now()]);
     }
 }

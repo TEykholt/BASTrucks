@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <title>Dashboard</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ URL::asset('css/app.css')}}" rel="stylesheet">
     <link href="{{ URL::asset('css/style.css')}}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/3daacf6a8c.js" crossorigin="anonymous"></script>
