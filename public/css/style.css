@@ -53,10 +53,6 @@ body{
     cursor: pointer;
 }
 
-#message {
-    resize: vertical;
-}
-
 #Attachments {
     display:block;
 }
@@ -162,4 +158,11 @@ body{
 .btn-secondary:hover{
     background-color: #c3c3c3;
     color: #373E82;
+}
+.btn-view{
+    text-align: right;
+}
+.text-area{
+    resize: none;
+    height: 280px !important;
 }

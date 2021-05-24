@@ -36,17 +36,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item active">
+                <li class="nav-item ">
                     <a class="nav-link" href="{{url('/')}}">My Submitted tickets</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item ">
                     <a class="nav-link" href="{{url('/?dashType=myDepartment')}}">My Department tickets</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item ">
                     <a class="nav-link" href="{{url('/?dashType=myAssigned')}}">Assigned tickets</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item ">
                     <a class="nav-link" href="{{url('/?dashType=allTickets')}}">All tickets</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{{url('/?dashType=archive')}}">Archive</a>
                 </li>
             </ul>
             <div class="ml-auto">

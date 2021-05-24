@@ -23,6 +23,7 @@ Route::get('/ticketInput', [\App\Http\Controllers\TicketController::class, 'load
 
 Route::get('/closeTicket/{id}', 'TicketController@closeTicket');
 Route::get('/openTicket/{id}', 'TicketController@openTicket');
+Route::post('/checkArchive', [\App\Http\Controllers\TicketController::class, 'checkArchive']);
 
 
 Route::get('/kpi', [\App\Http\Controllers\kpiController::class, 'GetAllKPIs']);
@@ -31,6 +32,8 @@ Route::get('/Feedback/{id}','FeedbackController@load_ticket_feedback' );
 Route::post('/Feedback/new', [\App\Http\Controllers\FeedbackController::class, 'addFeedback']);
 
 Route::post('/updateTicket', [\App\Http\Controllers\TicketController::class, 'updateTicket']);
+Route::post('/updateTicketMessage', [\App\Http\Controllers\TicketController::class, 'updateTicketMessage']);
+Route::post('/ticketviewer/editTicketAttachements', [\App\Http\Controllers\TicketController::class, 'editTicketAttachements']);
 
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);

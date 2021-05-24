@@ -41,6 +41,8 @@ class TicketController extends Controller
                 case 'allTickets':
                     return $this->getAllTickets();
                     break;
+                case 'archive':
+                    return $this->loadArchive();
 
                 default:
                     return $this->getTicketsFromUser();
@@ -49,10 +51,26 @@ class TicketController extends Controller
         }
     }
 
+    function loadArchive(){
+        return view('archive');
+    }
+    function checkArchive(Request $request){
+        $id=$request->input;
+
+        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
+            ->join("department","department.id","=","support_ticket.department_id")
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
+            ->where('support_ticket.id', $id)
+            ->get();
+
+        return view('archiveReturn')->with('data', $data);
+    }
+
     function getAllTickets(){
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
+            ->where('closed_at',  null)
             ->get();
 
         $status = statusModel::get();
@@ -67,6 +85,7 @@ class TicketController extends Controller
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
             ->where('support_ticket.person_id', auth()->user()->id)
+            ->where('closed_at',  null)
             ->get();
 
         $status = statusModel::get();
@@ -80,6 +99,7 @@ class TicketController extends Controller
 
         $Ticket_Persons = TicketPersonModel::select('ticket_person.id', 'ticket_person.status', 'ticket_person.ticket_id')
             ->where('ticket_person.person_id', auth()->user()->id)
+            ->where('closed_at',  null)
             ->get();
 
         $AssignedTickets = array();
@@ -102,8 +122,9 @@ class TicketController extends Controller
     function getTicketsFromUserDepartment() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'email', 'department.name as department_name')
             ->where('department.id', auth()->user()->department_id)
+            ->where('closed_at',  null)
             ->get();
 
         $status = statusModel::get();
@@ -116,10 +137,9 @@ class TicketController extends Controller
     function GetSingle($Ticket_id, $TicketOnly) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'email', 'department.name as department_name')
             ->where('support_ticket.id', $Ticket_id)
             ->get();
-
         $attachment = null; $logs = null;
 
         if (!$TicketOnly) {
@@ -141,6 +161,20 @@ class TicketController extends Controller
         else {
             return null;
         }
+   }
+
+   function getTicketViewerWithoutRequest($id){
+       $TicketInformation = $this->GetSingle($id, false);
+
+       if ($TicketInformation) {
+           $status = statusModel::get();
+
+           $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
+           return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
+       }
+       else {
+           $this->loadDashboard(new Request());
+       }
    }
 
    function getTicketViewer(Request $request) {
@@ -242,5 +276,36 @@ class TicketController extends Controller
 
         TicketModel::where('id', $id)
             ->update(['type' => $type, "updated_at" => Carbon::now()]);
+    }
+
+    function editTicketAttachements(Request $request){
+        $request->except('_token');
+        $files = $request->file("Attachments");
+        foreach($files as $file){
+            $attachment = new attachmentModel;
+            $attachment->name = $file->getClientOriginalName();
+            $attachment->ticket_id = $request->id;
+            $attachment->save();
+
+            $destinationPath = 'uploaded_files';
+            $file->move($destinationPath,$file->getClientOriginalName());
+        }
+
+        $TicketInformation = $this->GetSingle($request->id, false);
+
+        if ($TicketInformation) {
+            $status = statusModel::get();
+
+            $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
+            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
+        }
+    }
+
+    function updateTicketMessage(Request $request){
+        $id=$request->id;
+        $message=$request->message;
+
+        TicketModel::where('id', $id)
+            ->update(['message' => $message, "updated_at" => Carbon::now()]);
     }
 }
