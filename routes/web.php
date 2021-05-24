@@ -38,6 +38,10 @@ Route::post('/ticketviewer/editTicketAttachements', [\App\Http\Controllers\Ticke
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);
 
+Route::get('/ticketviewer/{id}', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);
+
+Route::post('/ticketviewerArchive', [\App\Http\Controllers\TicketController::class, 'getTicketViewerArchive']);
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

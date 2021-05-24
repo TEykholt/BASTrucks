@@ -83,11 +83,16 @@ class TicketController extends Controller
     function getTicketsFromUser() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
+            ->leftJoin("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
+            ->selectRaw('support_ticket.id, support_ticket.status, subject, type, message, person.name as person_name, department.name as department_name, ticket_person.person_id, (SELECT name FROM person WHERE person.id = ticket_person.person_id) as ticketWorker')
             ->where('support_ticket.person_id', auth()->user()->id)
             ->where('closed_at',  null)
             ->get();
 
+        $workerData = TicketModel::join("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
+            ->join("person","person.id","=","ticket_person.person_id")
+            ->select('name')
+            ->get();
         $status = statusModel::get();
         $types = ticketTypes::get();
         $departments = departmentModel::get();
@@ -176,11 +181,14 @@ class TicketController extends Controller
        }
    }
 
+    function getTicketViewerArchive(Request $request) {
+        return url('/ticketviewer', $request->id);
+    }
+
    function getTicketViewer(Request $request) {
         //ToDo: Check if user has permissions to view this ticket
        $request->except('_token');
         $TicketInformation = $this->GetSingle($request->id, false);
-
         if ($TicketInformation) {
             $status = statusModel::get();
 
@@ -191,7 +199,6 @@ class TicketController extends Controller
         else {
             $this->loadDashboard(new Request());
         }
-
    }
     function addTicket(Request $request){
         $request->except('_token');

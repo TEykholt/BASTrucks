@@ -20,11 +20,12 @@
             <td name="ticketHolder">TODO: ticket werkers werkend maken</td>
             <td name="status">{{$_data['status']}}</td>
 
+                <form hidden name="toticketviewer" action="/ticketviewerArchive" method="POST" >
+                    @csrf
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input hidden id="id"  name="id" value="{{$_data['id']}}">
+                </form>
 
-            <form name="toticketviewer" action="\ticketviewer" method="POST" style="display: none;">
-                @csrf
-                <input hidden name="id" value="{{$_data['id']}}">
-            </form>
         </tr>
     @endforeach
 </table>

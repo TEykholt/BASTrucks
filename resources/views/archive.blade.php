@@ -1,6 +1,5 @@
 @include("incl/header")
 <input class="form-control" id="input" type="text" placeholder="Enter ticket number" onchange="checkArchive();">
-
 <div id="divContent"></div>
 <script>
     function checkArchive(){
@@ -26,23 +25,23 @@
     }
 
     function ToTicketViewer(event) {
-        var TrChildren = event.target.parentNode.children;
+        var data = {id: $('#id').val()}
+        console.log(data);
 
-        var toticketviewerForm = null;
-        for (let index = 0; index < TrChildren.length; index++) {
-            const element = TrChildren[index];
-            if (element.nodeName == "FORM") {
-                toticketviewerForm = element;
-                break;
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            dataType : 'json',
+            url: "/ticketviewerArchive",
+            data: data,
+            success: function (data) {
+                $("#divContent").html(data);
+            },
+            error: function(xhr, status, error) {
+                window.location = xhr.responseText;
             }
-        }
-        if (toticketviewerForm) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-            });
-            toticketviewerForm.submit();
-        }
+        })
     }
 </script>

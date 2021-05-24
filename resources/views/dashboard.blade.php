@@ -88,8 +88,13 @@
         <td name="message">{{ \Illuminate\Support\Str::limit($result['message'], $limit = 75, $end = '...')}}</td>
         <td name="department_name">{{$result['department_name']}}</td>
         <td name="status">{{$result['status']}}</td>
-        <td name="ticketHolder">TODO: ticket werkers werkend maken</td>
-
+        @isset($result['ticketWorker'])
+            @if($result['ticketWorker'] != null)
+                <td name="ticketHolder">{{$result['ticketWorker']}}</td>
+            @endif
+        @else
+                <td name="ticketHolder">No wokers assigned</td>
+        @endisset
         <form name="toticketviewer" action="\ticketviewer" method="POST" style="display: none;">
             @csrf
             <input hidden name="id" value="{{$result['id']}}">
@@ -107,6 +112,8 @@
         var toticketviewerForm = null;
         for (let index = 0; index < TrChildren.length; index++) {
             const element = TrChildren[index];
+            console.log(element)
+
             if (element.nodeName == "FORM") {
                 toticketviewerForm = element;
                 break;
