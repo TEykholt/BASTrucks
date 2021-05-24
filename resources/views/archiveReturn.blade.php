@@ -20,6 +20,7 @@
             <td name="ticketHolder">TODO: ticket werkers werkend maken</td>
             <td name="status">{{$_data['status']}}</td>
 
+
             <form name="toticketviewer" action="\ticketviewer" method="POST" style="display: none;">
                 @csrf
                 <input hidden name="id" value="{{$_data['id']}}">
@@ -27,20 +28,3 @@
         </tr>
     @endforeach
 </table>
-<script>
-    function ToTicketViewer(event) {
-        var TrChildren = event.target.parentNode.children;
-
-        var toticketviewerForm = null;
-        for (let index = 0; index < TrChildren.length; index++) {
-            const element = TrChildren[index];
-            if (element.nodeName == "FORM") {
-                toticketviewerForm = element;
-                break;
-            }
-        }
-        if (toticketviewerForm) {
-            toticketviewerForm.submit();
-        }
-    }
-</script>

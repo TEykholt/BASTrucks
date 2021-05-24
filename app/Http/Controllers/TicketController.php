@@ -99,7 +99,6 @@ class TicketController extends Controller
 
         $Ticket_Persons = TicketPersonModel::select('ticket_person.id', 'ticket_person.status', 'ticket_person.ticket_id')
             ->where('ticket_person.person_id', auth()->user()->id)
-            ->where('closed_at',  null)
             ->get();
 
         $AssignedTickets = array();
@@ -179,7 +178,7 @@ class TicketController extends Controller
 
    function getTicketViewer(Request $request) {
         //ToDo: Check if user has permissions to view this ticket
-
+       $request->except('_token');
         $TicketInformation = $this->GetSingle($request->id, false);
 
         if ($TicketInformation) {

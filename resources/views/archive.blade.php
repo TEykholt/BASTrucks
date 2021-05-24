@@ -24,4 +24,25 @@
             }
         })
     }
+
+    function ToTicketViewer(event) {
+        var TrChildren = event.target.parentNode.children;
+
+        var toticketviewerForm = null;
+        for (let index = 0; index < TrChildren.length; index++) {
+            const element = TrChildren[index];
+            if (element.nodeName == "FORM") {
+                toticketviewerForm = element;
+                break;
+            }
+        }
+        if (toticketviewerForm) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+            });
+            toticketviewerForm.submit();
+        }
+    }
 </script>

@@ -89,6 +89,7 @@
         <td name="department_name">{{$result['department_name']}}</td>
         <td name="status">{{$result['status']}}</td>
         <td name="ticketHolder">TODO: ticket werkers werkend maken</td>
+
         <form name="toticketviewer" action="\ticketviewer" method="POST" style="display: none;">
             @csrf
             <input hidden name="id" value="{{$result['id']}}">
