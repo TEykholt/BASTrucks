@@ -34,6 +34,7 @@ Route::post('/Feedback/new', [\App\Http\Controllers\FeedbackController::class, '
 Route::post('/updateTicket', [\App\Http\Controllers\TicketController::class, 'updateTicket']);
 Route::post('/updateTicketMessage', [\App\Http\Controllers\TicketController::class, 'updateTicketMessage']);
 Route::post('/ticketviewer/editTicketAttachements', [\App\Http\Controllers\TicketController::class, 'editTicketAttachements']);
+Route::post('/assignTicketPerson', [\App\Http\Controllers\TicketPersonController::class, 'TicketPersonAssign']);
 
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);

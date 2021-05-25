@@ -54,7 +54,7 @@
 
         <div class="employee employee_background mt-2">
             <h4 class="pt-2">Employees</h4>
-            <div class="d-flex"> Tom Eykholt <a class="ml-auto" href="#">Add to ticket</a></div>
+            <div class="d-flex"> Tom Eykholt <a value="6" onclick="addTicketPerson(this.value)" class="ml-auto" href="#">Add to ticket</a></div>
             <div class="d-flex"> Tjerk Zeilstra <a class="ml-auto" href="#">Add to ticket</a></div>
             <div class="d-flex"> Rik den Breejen <a class="ml-auto" href="#">Add to ticket</a></div>
         </div>
@@ -90,6 +90,21 @@
             type: "POST",
             dataType : 'json',
             url: "/updateTicket",
+            data: data,
+        })
+    }
+
+    function addTicketPerson(person_id) {
+        var data = {id : person_id}
+        console.log(data);
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            dataType : 'json',
+            url: "/addTicketPerson",
             data: data,
         })
     }

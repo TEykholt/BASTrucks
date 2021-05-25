@@ -25,15 +25,17 @@ class TicketPersonController extends Controller
 
     function TicketPersonAssign(Request $request)
     {
-        TicketPersonModel::where('status', $request->status);
-        if(['status' == "unassigned"])
+        $ticket_person=TicketPersonModel::select('status')->where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)->get();
+        
+        if(count($ticket_person)<=0)
         {
-            TicketPersonUpdate($request);
+            return $this->TicketPersonAdd($request);
         }
-        if(['status' == "open"])
+        else if($ticket_person[0]->status=="unassigned")
         {
-            TicketPersonAdd($request);
+            return $this->TicketPersonUpdate($request);
         }
+
     }
 
     function TicketPersonAdd(Request $request)
