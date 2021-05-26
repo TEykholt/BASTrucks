@@ -287,16 +287,17 @@ class TicketController extends Controller
     function editTicketAttachements(Request $request){
         $request->except('_token');
         $files = $request->file("Attachments");
-        foreach($files as $file){
-            $attachment = new attachmentModel;
-            $attachment->name = $file->getClientOriginalName();
-            $attachment->ticket_id = $request->id;
-            $attachment->save();
+        if($files != null){
+            foreach($files as $file){
+                $attachment = new attachmentModel;
+                $attachment->name = $file->getClientOriginalName();
+                $attachment->ticket_id = $request->id;
+                $attachment->save();
 
-            $destinationPath = 'uploaded_files';
-            $file->move($destinationPath,$file->getClientOriginalName());
+                $destinationPath = 'uploaded_files';
+                $file->move($destinationPath,$file->getClientOriginalName());
+            }
         }
-
         $TicketInformation = $this->GetSingle($request->id, false);
 
         if ($TicketInformation) {
