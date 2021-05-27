@@ -1,6 +1,6 @@
 @include("incl/header")
 @isset($userData)
-    <h1 class="mt-3">Welkom {{$userData[0]['name']}}</h1>
+    <h1 class="mt-3">Welcome {{$userData[0]['name']}}</h1>
     <p>Select the KPI's you want to see on the dashboard.</p>
     @isset($kpiData)
             <form method="POST" action="/userPreference/{{$userData[0]['name']}}">
