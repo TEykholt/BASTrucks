@@ -54,9 +54,10 @@
 
         <div class="employee employee_background mt-2">
             <h4 class="pt-2">Employees</h4>
-            <div class="d-flex"> Tom Eykholt <a value="6" onclick="addTicketPerson(this.value)" class="ml-auto" href="#">Add to ticket</a></div>
-            <div class="d-flex"> Tjerk Zeilstra <a class="ml-auto" href="#">Add to ticket</a></div>
-            <div class="d-flex"> Rik den Breejen <a class="ml-auto" href="#">Add to ticket</a></div>
+            
+            @foreach($AssignedPersons as $assignedPerson)
+            <div class="d-flex"> {{$assignedPerson['name']}} <a value="{{$assignedPerson['id']}}"  class="ml-auto" href="#">Remove from ticket</a></div>
+            @endforeach
         </div>
     </div>
 </div>

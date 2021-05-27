@@ -11,6 +11,7 @@ use App\TicketLogModel;
 use App\ticketTypes;
 use App\statusModel;
 use App\TicketPersonModel;
+use App\Http\Controllers\TicketPersonController;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -204,7 +205,11 @@ class TicketController extends Controller
 
             $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
 
-            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
+            $ticketPersonController = new TicketPersonController();
+            $ticketPersonRequest = new Request();
+            $ticketPersonRequest->ticket_id=$request->id;
+            $assignedPersons=$ticketPersonController->GetTicketPersonsByTicket($ticketPersonRequest);
+            return view("ticketviewer")->with("AssignedPersons", $assignedPersons)->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
         }
         else {
             $this->loadDashboard(new Request());

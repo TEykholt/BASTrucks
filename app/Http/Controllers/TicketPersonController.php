@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\TicketPersonModel;
 use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 
 class TicketPersonController extends Controller
 {
@@ -59,5 +60,21 @@ class TicketPersonController extends Controller
     function GetTickets(Request $request)
     {
         TicketPersonModel::where('ticket_id', $request->ticket_id)->get();
+    }
+
+    function GetTicketPersonsByTicket(Request $request)
+    {
+        $ticket_persons=TicketPersonModel::where('ticket_id', $request->ticket_id)->where('status', "assigned")->get();
+        $userController = new UserController();
+        $userRequest = new Request();
+        $returnPersons=array();
+
+        for ($i=0; $i < Count($ticket_persons); $i++) 
+        {
+            $userRequest->id=$ticket_persons[$i]->person_id;
+            $user=$userController->getUser($userRequest)[0];
+            array_push($returnPersons, $user);
+        }
+        return $returnPersons;
     }
 }
