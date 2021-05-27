@@ -25,6 +25,8 @@ class TicketController extends Controller
 
     function loadDashboard(Request $repuest) {
         //ToDo: implement permissions
+
+        auth()->user()->assignRole("view own tickets");
         if ( $repuest) {
             switch ($repuest->dashType) {
                 case 'myTickets':
@@ -44,6 +46,7 @@ class TicketController extends Controller
                     break;
                 case 'archive':
                     return $this->loadArchive();
+                    break;
 
                 default:
                     return $this->getTicketsFromUser();
@@ -53,6 +56,9 @@ class TicketController extends Controller
     }
 
     function loadArchive(){
+        if (!auth()->user()->can("view archived tickets")) {
+            abort(403);
+        }
         return view('archive');
     }
     function checkArchive(Request $request){
@@ -68,6 +74,10 @@ class TicketController extends Controller
     }
 
     function getAllTickets(){
+        if (auth()->user()->can("view all tickets")) {
+            abort(403);
+        }
+
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
@@ -92,6 +102,9 @@ class TicketController extends Controller
     }
 
     function getTicketsFromUser() {
+        if (!auth()->user()->can("view own tickets")) {
+            abort(403);
+        }
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->leftJoin("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
@@ -112,6 +125,9 @@ class TicketController extends Controller
     }
 
     function getAssignedTicketsFromUser() {
+        if (!auth()->user()->can("view assigned tickets")) {
+            abort(403);
+        }
 
         $Ticket_Persons = TicketPersonModel::select('ticket_person.id', 'ticket_person.status', 'ticket_person.ticket_id')
             ->where('ticket_person.person_id', auth()->user()->id)
@@ -136,6 +152,9 @@ class TicketController extends Controller
     }
 
     function getTicketsFromUserDepartment() {
+        if (auth()->user()->can("view own department tickets")) {
+            abort(403);
+        }
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'email', 'department.name as department_name')

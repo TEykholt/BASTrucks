@@ -14,19 +14,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // create permissions
-        Permission::create(['name' => 'ticket input']);
-        Permission::create(['name' => 'view own tickets']);
-        Permission::create(['name' => 'view own department tickets']);
-        Permission::create(['name' => 'view all tickets']);
+        // create permissions 
+        $Permissions = array(
+            ['name' => 'ticket input'],
+            ['name' => 'view own tickets'],
+            ['name' => 'view own department tickets'],
+            ['name' => 'view assigned tickets'],
+            ['name' => 'view all tickets'],
+            ['name' => 'view archived tickets'],
+            ['name' => 'edit ticket status'],
+            ['name' => 'edit ticket types'],
+            ['name' => 'edit ticket'],
+            ['name' => 'assign employee'],
+            ['name' => 'unassign employee'],
+            ['name' => 'edit employee']
+        );
 
-        Permission::create(['name' => 'edit ticket status']);
-        Permission::create(['name' => 'edit ticket types']);
-        Permission::create(['name' => 'edit ticket']);
-        
-        Permission::create(['name' => 'assign employee']);
-        Permission::create(['name' => 'unassign employee']);
-        Permission::create(['name' => 'edit employee']);
+        for ($i=0; $i < count($Permissions); $i++) { 
+            Permission::create($Permissions[$i]);
+            $role = Role::create($Permissions[$i]);
+
+            $role->givePermissionTo($Permissions[$i]["name"]);
+        }  
 
         // $this->call(UserSeeder::class);
     }
