@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\TicketPersonModel;
 use Illuminate\Http\Request;
 use App\ticketTypes;
-
+use Illuminate\Support\Facades\Redirect;
 
 class TicketTypeController extends Controller
 {
@@ -24,30 +24,29 @@ class TicketTypeController extends Controller
 
     function edit($id){
         $types = ticketTypes::findOrFail($id);
-        return view("tickettypes/ticketTypesEdit")->with('types', $types);
+        return view("tickettypes/ticketTypesEdit")->with('types', $types)->with('id', $id);
     }
 
 
     //functions
-    function AddType(Request $request)
+    function Add(Request $request)
     {
-        $input = $request->all();
-        ticketTypes::create($input);
-        return $this->GetAllTypes();
+        ticketTypes::create($request->all());
+        return Redirect::to('/ticketType');
     }
 
-    function UpdateType($id, Request $request)
+    function Update($id, Request $request)
     {
         $type = ticketTypes::findOrFail($id);
         $input = $request->all();
         $type->fill($input)->save();
-        return $this->GetAllTypes();
+        return Redirect::to('/ticketType');
     }
 
-    function DeleteType($id)
+    function Delete($id)
     {
         $type = ticketTypes::findOrFail($id);
         $type->delete();
-        return $this->GetAllTypes();
+        return Redirect::to('/ticketType');
     }
 }
