@@ -28,13 +28,7 @@ class TicketController extends Controller
         //ToDo: implement permissions
 
         $DefaultRoles = [          
-            "ticket input",
-            "feedback input",
-
-            "view ticketviewer",
-            "view own tickets",
-
-            "edit own password",
+            "admin"
         ];
         auth()->user()->assignRole($DefaultRoles);
 

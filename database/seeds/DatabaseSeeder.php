@@ -53,6 +53,11 @@ class DatabaseSeeder extends Seeder
             $role->givePermissionTo($Permissions[$i]["name"]);
         }  
 
+        $adminRole = Role::findByName('admin');
+        for ($i=0; $i < count($Permissions); $i++) { 
+            $adminRole->givePermissionTo($Permissions[$i]['name']);
+        }
+
         // $this->call(UserSeeder::class);
     }
 }
