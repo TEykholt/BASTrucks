@@ -166,3 +166,19 @@ body{
     resize: none;
     height: 280px !important;
 }
+
+.card h5{
+    font-size: 28px;
+    text-align: center;
+}
+.card .card-body .card-text{
+    font-size: 20px;
+    text-align: center;
+}
+.card-header{
+    background-color: #373E82;
+}
+p{
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
