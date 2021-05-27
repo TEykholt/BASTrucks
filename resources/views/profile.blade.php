@@ -3,7 +3,7 @@
     <h1 class="mt-3">Welcome {{$userData[0]['name']}}</h1>
     <p>Select the KPI's you want to see on the dashboard.</p>
     @isset($kpiData)
-            <form method="POST" action="/userPreference/{{$userData[0]['name']}}">
+            <form method="POST" action="/userPreference/{{$userData[0]['username']}}">
                 @foreach($kpiData as $kpi)
 
                     <p class="font-weight-bold">{{$kpi['kpi']}}</p>
