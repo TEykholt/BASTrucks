@@ -73,5 +73,18 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'tell' => $data['tell']
         ]);
+
+        $DefaultRoles = [          
+            "ticket input",
+            "feedback input",
+
+            "view ticketviewer",
+            "view own tickets",
+
+            "edit own password",
+        ];
+        $newUser->assignRole($DefaultRoles);
+
+        return $newUser
     }
 }

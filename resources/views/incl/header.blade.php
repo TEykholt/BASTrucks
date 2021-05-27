@@ -22,7 +22,7 @@
         <img class="logo" src="{{ URL::asset('img/logo.png')}}" alt="logo">
         <div class="ml-auto  u-info">
             <a><i class="fas fa-bell"></i></a>
-            <a href="/profile/{{ Auth::user()->name }}" >{{ Auth::user()->name }}</a>
+            <a href="/profile/{{ Auth::user()->username }}" >{{ Auth::user()->username }}</a>
             <img class="icon" src="{{ URL::asset('img/icon.png')}}" alt="icon">
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 {{ __('Logout') }}
@@ -34,6 +34,7 @@
     </div>
 </div>
 @endguest
+
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,25 +42,44 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{url('/')}}">My Submitted tickets</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{url('/?dashType=myDepartment')}}">My Department tickets</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{url('/?dashType=myAssigned')}}">Assigned tickets</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{url('/?dashType=allTickets')}}">All tickets</a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="{{url('/?dashType=archive')}}">Archive</a>
-                </li>
+
+                @can("view own tickets")
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{url('/')}}">My Submitted tickets</a>
+                    </li>
+                @endcan
+
+                @can("view own department tickets")
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{url('/?dashType=myDepartment')}}">My Department tickets</a>
+                    </li>
+                @endcan
+
+                @can("view assigned tickets")
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{url('/?dashType=myAssigned')}}">Assigned tickets</a>
+                    </li>
+                @endcan
+
+                @can("view all tickets")
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{url('/?dashType=allTickets')}}">All tickets</a>
+                    </li>
+                @endcan
+
+                @can("view archived tickets")
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{url('/?dashType=archive')}}">Archive</a>
+                    </li>
+                @endcan
+
             </ul>
+
+            @can("ticket input")
             <div class="ml-auto">
                 <a class="nav-link  btn btn-secondary" href="{{url('/ticketInput')}}">Submit ticket</a>
             </div>
+            @endcan
         </div>
     </div>
 </nav>

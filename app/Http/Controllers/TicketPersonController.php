@@ -26,6 +26,10 @@ class TicketPersonController extends Controller
 
     function TicketPersonAssign(Request $request)
     {
+        if (!auth()->user()->can("assign employee")) {
+            abort(403);
+        }
+
         $ticket_person = TicketPersonModel::select('status')->where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)->get();
         
         if(count($ticket_person)<=0)
@@ -41,6 +45,10 @@ class TicketPersonController extends Controller
 
     function TicketPersonAssignByUsername(Request $request)
     {
+        if (!auth()->user()->can("assign employee")) {
+            abort(403);
+        }
+
         $userController = new UserController();
         $User = $userController->getUserByUserName($request);
         $ticket_person = TicketPersonModel::select('status')->where('person_id', $User->id)->where('ticket_id', $request->ticket_id)->get();
@@ -69,6 +77,10 @@ class TicketPersonController extends Controller
 
     function TicketPersonRemove(Request $request)
     {
+        if (!auth()->user()->can("unassign employee")) {
+            abort(403);
+        }
+
         TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
         ->update(['status' => "unassigned"]);
     }

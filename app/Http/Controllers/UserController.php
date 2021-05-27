@@ -10,17 +10,19 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     function getProfilePage(Request $request){
-        $user = User::where("name", $request->name)
+        $user = User::where("id", auth()->user()->id)
             ->get();
+
         $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
             ->get();
-        $kpiData = kpiModel::get();
 
+        $kpiData = kpiModel::get();
         return view('profile')->with('userData', $user)->with('kpiData', $kpiData)->with('personSetting', $person_settings);
     }
     function updateUserSettings(Request $request){
-        $user = User::where("name", $request->name)
+        $user = User::where("username", $request->username)
             ->get();
+
         $kpiData = kpiModel::get();
         foreach($kpiData as $kpi){
             $kpiRequest = "kpi".$kpi['id'];

@@ -26,18 +26,30 @@ class TicketController extends Controller
 
     function loadDashboard(Request $repuest) {
         //ToDo: implement permissions
+
+        $DefaultRoles = [          
+            "ticket input",
+            "feedback input",
+
+            "view ticketviewer",
+            "view own tickets",
+
+            "edit own password",
+        ];
+        auth()->user()->assignRole($DefaultRoles);
+
         if ( $repuest) {
             switch ($repuest->dashType) {
                 case 'myTickets':
                     return $this->getTicketsFromUser();
                     break;
 
-                case 'myAssigned':
-                    return $this->getAssignedTicketsFromUser();
-                    break;
-
                 case 'myDepartment':
                     return $this->getTicketsFromUserDepartment();
+                    break;
+
+                case 'myAssigned':
+                    return $this->getAssignedTicketsFromUser();
                     break;
 
                 case 'allTickets':
@@ -45,6 +57,7 @@ class TicketController extends Controller
                     break;
                 case 'archive':
                     return $this->loadArchive();
+                    break;
 
                 default:
                     return $this->getTicketsFromUser();
@@ -54,6 +67,9 @@ class TicketController extends Controller
     }
 
     function loadArchive(){
+        if (!auth()->user()->can("view archived tickets")) {
+            abort(403);
+        }
         return view('archive');
     }
     function checkArchive(Request $request){
@@ -69,6 +85,10 @@ class TicketController extends Controller
     }
 
     function getAllTickets(){
+        if (auth()->user()->can("view all tickets")) {
+            abort(403);
+        }
+
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'department.name as department_name')
@@ -131,6 +151,9 @@ class TicketController extends Controller
     }
 
     function getTicketsFromUser() {
+        if (!auth()->user()->can("view own tickets")) {
+            abort(403);
+        }
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->leftJoin("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
@@ -151,6 +174,9 @@ class TicketController extends Controller
     }
 
     function getAssignedTicketsFromUser() {
+        if (!auth()->user()->can("view assigned tickets")) {
+            abort(403);
+        }
 
         $Ticket_Persons = TicketPersonModel::select('ticket_person.id', 'ticket_person.status', 'ticket_person.ticket_id')
             ->where('ticket_person.person_id', auth()->user()->id)
@@ -175,6 +201,10 @@ class TicketController extends Controller
     }
 
     function getTicketsFromUserDepartment() {
+        if (!auth()->user()->can("view own department tickets")) {
+            abort(403);
+        }
+
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'email', 'department.name as department_name')
@@ -219,6 +249,10 @@ class TicketController extends Controller
    }
 
    function getTicketViewerWithoutRequest($id){
+        if (!auth()->user()->can("view ticketviewer")) {
+            abort(403);
+        }
+
        $TicketInformation = $this->GetSingle($id, false);
 
        if ($TicketInformation) {
@@ -238,7 +272,12 @@ class TicketController extends Controller
 
    function getTicketViewer(Request $request) {
         //ToDo: Check if user has permissions to view this ticket
-       $request->except('_token');
+
+        if (!auth()->user()->can("view ticketviewer")) {
+            abort(403);
+        }
+
+        $request->except('_token');
         $TicketInformation = $this->GetSingle($request->id, false);
         if ($TicketInformation) {
             $status = statusModel::get();
@@ -254,8 +293,13 @@ class TicketController extends Controller
         else {
             $this->loadDashboard(new Request());
         }
-   }
+    }
+
     function addTicket(Request $request){
+        if (!auth()->user()->can("ticket input")) {
+            abort(403);
+        }
+
         $request->except('_token');
         $files = $request->file("Attachments");
 
@@ -326,12 +370,20 @@ class TicketController extends Controller
     }
 
     function loadTicketInput(){
+        if (!auth()->user()->can("ticket input")) {
+            abort(403);
+        }
+
         $types = ticketTypes::get();
         $department = departmentModel::get();
         return view("ticketInput")->with('types', $types)->with('departments', $department);
     }
 
     function updateTicket(Request $request){
+        if (!auth()->user()->can("edit ticket")) {
+            abort(403);
+        }
+
         $id=$request->id;
         $type=$request->type;
 
@@ -340,6 +392,10 @@ class TicketController extends Controller
     }
 
     function editTicketAttachements(Request $request){
+        if (!auth()->user()->can("edit ticket")) {
+            abort(403);
+        }
+
         $request->except('_token');
         $files = $request->file("Attachments");
         if($files != null){
@@ -364,6 +420,10 @@ class TicketController extends Controller
     }
 
     function updateTicketMessage(Request $request){
+        if (!auth()->user()->can("edit ticket")) {
+            abort(403);
+        }
+
         $id=$request->id;
         $message=$request->message;
 
