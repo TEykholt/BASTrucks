@@ -17,17 +17,33 @@ class DatabaseSeeder extends Seeder
         // create permissions 
         $Permissions = array(
             ['name' => 'ticket input'],
+            ['name' => 'feedback input'],
+
+            ['name' => 'view ticketviewer'],
             ['name' => 'view own tickets'],
             ['name' => 'view own department tickets'],
             ['name' => 'view assigned tickets'],
             ['name' => 'view all tickets'],
             ['name' => 'view archived tickets'],
-            ['name' => 'edit ticket status'],
-            ['name' => 'edit ticket types'],
+
             ['name' => 'edit ticket'],
+
             ['name' => 'assign employee'],
             ['name' => 'unassign employee'],
-            ['name' => 'edit employee']
+            ['name' => 'edit employee'],
+
+            ['name' => 'view kpi'],
+
+            ['name' => 'admin panel'],
+            ['name' => 'admin'],
+
+            ['name' => 'edit other password'],
+            ['name' => 'edit other username'],
+            ['name' => 'edit other email'],
+
+            ['name' => 'edit own password'],
+            ['name' => 'edit own username'],
+            ['name' => 'edit own email'],
         );
 
         for ($i=0; $i < count($Permissions); $i++) { 

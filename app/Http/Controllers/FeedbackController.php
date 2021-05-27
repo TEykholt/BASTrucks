@@ -9,6 +9,10 @@ class FeedbackController extends Controller
 {
     public function addFeedback(Request $request)
     {
+        if (!auth()->user()->can("feedback input")) {
+            abort(403);
+        }
+
         $Feedback = new FeedbackModel;
         $Feedback->ticket_id = $request->ticket_id;
         $Feedback->pros = $request->pros;

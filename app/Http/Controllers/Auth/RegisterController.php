@@ -66,12 +66,25 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $newUser = User::create([
             'name' => $data['name'],
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
             'job_title' => $data['job_title'],
             'email' => $data['email'],
         ]);
+
+        $DefaultRoles = [          
+            "ticket input",
+            "feedback input",
+
+            "view ticketviewer",
+            "view own tickets",
+
+            "edit own password",
+        ];
+        $newUser->assignRole($DefaultRoles);
+
+        return $newUser
     }
 }

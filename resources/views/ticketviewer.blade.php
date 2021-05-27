@@ -4,34 +4,52 @@
         <div class="col-lg-6">
             <p id="id" hidden>{{$result['id']}}</p>
             <h1 class="mt-2">Ticket - {{$result['id']}}</h1>
-            <select onchange="updateTicket()" id="type" class="form-control mb-4 w-25 mt-3">
-                <option selected value="{{$result['type']}}">{{$result['type']}}</option>
-                @foreach($types as $type)
-                    <option value="{{$type['name']}}">{{$type['name']}}</option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-lg-6 d-flex">
-            <div class="ml-auto">
-                    <p class="text-right">
-                        Submitted by {{$result['person_name']}}<br/>
-                        {{$result['email']}}<br/>
-                        @if($result['status'] == 'closed')
-                            <a href="{{ url('/openTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Open Ticket</a>
-                        @else
-                            <a href="{{ url('/closeTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Close Ticket</a>
-                        @endif
-                    </p>
+            
+            @can("edit ticket")
+                <select onchange="updateTicket()" id="type" class="form-control mb-4 w-25 mt-3">
+                    <option selected value="{{$result['type']}}">{{$result['type']}}</option>
+                    @foreach($types as $type)
+                        <option value="{{$type['name']}}">{{$type['name']}}</option>
+                    @endforeach
+                </select>
+            @else
+                <div id="type" class="form-control mb-4 w-25 mt-3">
+                    {{$result['type']}}
+                </div>
+            @endcan
 
-            </div>
         </div>
+
+        @can("edit ticket")
+            <div class="col-lg-6 d-flex">
+                <div class="ml-auto">
+                        <p class="text-right">
+                            Submitted by {{$result['person_name']}}<br/>
+                            {{$result['email']}}<br/>
+                            @if($result['status'] == 'closed')
+                                <a href="{{ url('/openTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Open Ticket</a>
+                            @else
+                                <a href="{{ url('/closeTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Close Ticket</a>
+                            @endif
+                        </p>
+
+                </div>
+            </div>
+        @endcan
+        
     </div>
 <div class="row">
     <div class="col-lg-7">
         <h4 class="pt-2">{{$result['subject']}}</h4>
-            <textarea id="message" class="form-control text-area">
-                {{$result['message']}}
-            </textarea>
+            @can("edit ticket")
+                <textarea id="message" class="form-control text-area">
+                    {{$result['message']}}
+                </textarea>
+            @else
+                <div id="message" class="form-control text-area">
+                    {{$result['message']}}
+                </div>
+            @endcan
     </div>
     <div class="col-lg-5 ">
         <div class="d-flex gallery_pics_holder">
@@ -43,31 +61,38 @@
                 @endforeach
             @endif
         </div>
-        <form method="post" class="text-right" action="/ticketviewer/editTicketAttachements" enctype="multipart/form-data">
-            @csrf
-            <input class="ml-auto" type="file" accept="image/*" name="Attachments[]" id="Attachments" multiple>
-            <input hidden name="id" value="{{$result['id']}}">
-            <input type="submit" class="btn btn-primary mt-2 btn-view" value="Submit">
-
-        </form>
-
+        
+        @can("edit ticket")
+            <form method="post" class="text-right" action="/ticketviewer/editTicketAttachements" enctype="multipart/form-data">
+                @csrf
+                <input class="ml-auto" type="file" accept="image/*" name="Attachments[]" id="Attachments" multiple>
+                <input hidden name="id" value="{{$result['id']}}">
+                <input type="submit" class="btn btn-primary mt-2 btn-view" value="Submit">
+            </form>
+        @endcan
 
         <div class="employee employee_background mt-2">
             <h4 class="pt-2">Assigned Employees</h4>
             
             @foreach($AssignedPersons as $assignedPerson)
-                <div class="d-flex"> {{$assignedPerson['name']}} <a class="assignedPerson ml-auto" href="#" onclick='removeTicketPerson(<?= $assignedPerson["id"] ?>)'>Remove from ticket</a></div>
+                <div class="d-flex"> {{$assignedPerson['name']}}
+                    @can("unassign employee")
+                        <a class="assignedPerson ml-auto" href="#" onclick='removeTicketPerson(<?= $assignedPerson["id"] ?>)'>Remove from ticket</a>
+                    @endcan
+                </div>
             @endforeach 
 
         </div>
 
-        <div class="employee employee_background mt-2">
-            <h4 class="pt-2">Assign an Employees</h4>
+        @can(assign employee)
+            <div class="employee employee_background mt-2">
+                <h4 class="pt-2">Assign an Employees</h4>
 
-            <input class="form-control" name="searchbox" id="input" type="text" placeholder="Enter name" onkeyup="getSuggestions(event)">
-            
-            <input id="userSearchbox" type="submit" class="btn btn-primary mt-2 btn-view" value="Assign" onclick="addTicketPerson()">
-        </div>
+                <input class="form-control" name="searchbox" id="input" type="text" placeholder="Enter name" onkeyup="getSuggestions(event)">
+                
+                <input id="userSearchbox" type="submit" class="btn btn-primary mt-2 btn-view" value="Assign" onclick="addTicketPerson()">
+            </div>
+        @endcan
     </div>
 </div>
 
