@@ -12,7 +12,7 @@
         <div class="col-4">
             <h2>Status</h2>
             <p>Discription</p>
-            <p><a href="/ticketType" class="btn btn-dark btn-large">Mange</a><p>
+            <p><a href="/ticketStatus" class="btn btn-dark btn-large">Mange</a><p>
         </div>
         <div class="col-4">
             <h2>Kpi</h2>
