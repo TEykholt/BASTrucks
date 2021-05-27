@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\attachmentModel;
 use App\departmentModel;
+use App\kpiModel;
+use App\personSettingsModel;
 use App\TicketModel;
 use App\TicketLogModel;
 use App\ticketTypes;
@@ -12,8 +14,6 @@ use App\TicketPersonModel;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\Mail;
 
 class TicketController extends Controller
 {
@@ -73,11 +73,21 @@ class TicketController extends Controller
             ->where('closed_at',  null)
             ->get();
 
+        $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
+            ->get();
+
+        $allKpi = [];
+        foreach($person_settings as $wantedKpi){
+            $kpi = kpiModel::where("id",$wantedKpi["preferd_kpi"])
+                ->get();
+            array_push($allKpi, $kpi[0]["kpi"]);
+            //array_push($allKpi, $kpi["result"]);
+        }
+        
         $status = statusModel::get();
         $types = ticketTypes::get();
         $departments = departmentModel::get();
-
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments);
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi);
     }
 
     function getTicketsFromUser() {

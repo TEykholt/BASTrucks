@@ -4,6 +4,7 @@
     <title>Dashboard</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ URL::asset('css/app.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="{{ URL::asset('css/style.css')}}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/3daacf6a8c.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -17,7 +18,7 @@
         <img class="logo" src="{{ URL::asset('img/logo.png')}}" alt="logo">
         <div class="ml-auto  u-info">
             <a><i class="fas fa-bell"></i></a>
-            <a >{{ Auth::user()->name }}</a>
+            <a href="/profile/{{ Auth::user()->name }}" >{{ Auth::user()->name }}</a>
             <img class="icon" src="{{ URL::asset('img/icon.png')}}" alt="icon">
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 {{ __('Logout') }}

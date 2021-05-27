@@ -1,4 +1,9 @@
 @include("incl/header")
+@isset($allKpis)
+    @foreach($allKpis as $kpi)
+        {{$kpi}}
+    @endforeach
+@endisset
 <div class="d-flex pt-3 pb-3">
     <h1 class="mt-4 align-middle">Dashboard</h1>
     <div class="Filter-List ml-auto">
