@@ -26,7 +26,7 @@ class TicketPersonController extends Controller
 
     function TicketPersonAssign(Request $request)
     {
-        $ticket_person=TicketPersonModel::select('status')->where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)->get();
+        $ticket_person = TicketPersonModel::select('status')->where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)->get();
         
         if(count($ticket_person)<=0)
         {
@@ -37,6 +37,22 @@ class TicketPersonController extends Controller
             return $this->TicketPersonUpdate($request);
         }
 
+    }
+
+    function TicketPersonAssignByUsername(Request $request)
+    {
+        $userController = new UserController();
+        $User = $userController->getUserByUserName($request);
+        $ticket_person = TicketPersonModel::select('status')->where('person_id', $User->id)->where('ticket_id', $request->ticket_id)->get();
+        
+        if(count($ticket_person)<=0)
+        {
+            return $this->TicketPersonAdd($request);
+        }
+        else if($ticket_person[0]->status=="unassigned")
+        {
+            return $this->TicketPersonUpdate($request);
+        }
     }
 
     function TicketPersonAdd(Request $request)
@@ -72,8 +88,11 @@ class TicketPersonController extends Controller
         for ($i=0; $i < Count($ticket_persons); $i++) 
         {
             $userRequest->id=$ticket_persons[$i]->person_id;
-            $user=$userController->getUser($userRequest)[0];
-            array_push($returnPersons, $user);
+            $user = $userController->getUser($userRequest);
+
+            if ($user) {
+                array_push($returnPersons, $user);
+            }
         }
         return $returnPersons;
     }

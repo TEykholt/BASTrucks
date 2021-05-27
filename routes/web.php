@@ -36,7 +36,10 @@ Route::post('/updateTicketMessage', [\App\Http\Controllers\TicketController::cla
 Route::post('/ticketviewer/editTicketAttachements', [\App\Http\Controllers\TicketController::class, 'editTicketAttachements']);
 
 Route::post('/assignTicketPerson', [\App\Http\Controllers\TicketPersonController::class, 'TicketPersonAssign']);
+Route::post('/assignTicketPersonByUsername', [\App\Http\Controllers\TicketPersonController::class, 'TicketPersonAssignByUsername']);
 Route::post('/unassignTicketPerson', [\App\Http\Controllers\TicketPersonController::class, 'TicketPersonRemove']);
+
+Route::post('/getUserAutoFill', [\App\Http\Controllers\UserController::class, 'getAutoCompleteUsers']);
 
 Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);

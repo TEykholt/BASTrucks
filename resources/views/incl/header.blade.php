@@ -9,6 +9,10 @@
     <script src="https://kit.fontawesome.com/3daacf6a8c.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script src="https://unpkg.com/jquery@2.2.4/dist/jquery.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <link href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css"/>
 </head>
 <body>
 @guest

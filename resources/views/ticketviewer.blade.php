@@ -53,12 +53,20 @@
 
 
         <div class="employee employee_background mt-2">
-            <h4 class="pt-2">Employees</h4>
+            <h4 class="pt-2">Assigned Employees</h4>
             
             @foreach($AssignedPersons as $assignedPerson)
                 <div class="d-flex"> {{$assignedPerson['name']}} <a class="assignedPerson ml-auto" href="#" onclick='removeTicketPerson(<?= $assignedPerson["id"] ?>)'>Remove from ticket</a></div>
             @endforeach 
 
+        </div>
+
+        <div class="employee employee_background mt-2">
+            <h4 class="pt-2">Assign an Employees</h4>
+
+            <input class="form-control" name="searchbox" id="input" type="text" placeholder="Enter name" onkeyup="getSuggestions(event)">
+            
+            <input id="userSearchbox" type="submit" class="btn btn-primary mt-2 btn-view" value="Assign" onclick="addTicketPerson()">
         </div>
     </div>
 </div>
@@ -71,19 +79,23 @@
         <th>created by</th>
         <th>Message</th>
     </tr>
-@foreach($logs as $log)
-        <tr class="trow">
-            <td>{{$log['created_at']}}</td>
-            <td>{{$log['created_by']}}</td>
-            <td>{{$log['message']}}</td>
-        </tr>
-@endforeach
+        @foreach($logs as $log)
+            <tr class="trow">
+                <td>{{$log['created_at']}}</td>
+                <td>{{$log['created_by']}}</td>
+                <td>{{$log['message']}}</td>
+            </tr>
+        @endforeach
     </table>
 </div>
+
 <script>
+    var ticketPersonSearchText = ""
     function updateTicket() {
-        var data = {type: $('#type').val(), id : $('#id').html()}
-        console.log(data);
+        var data = {
+            type: $('#type').val(), 
+            id : $('#id').html()
+        }
 
         $.ajax({
             headers: {
@@ -96,10 +108,12 @@
         })
     }
 
-    function addTicketPerson(person_id) {
+    function addTicketPerson() 
+    {
 
+        console.log(ticketPersonSearchText);
         var data = {
-            person_id : person_id,
+            username : ticketPersonSearchText,
             ticket_id : "{{$result['id']}}"
         }
         console.log(data);
@@ -110,7 +124,7 @@
             },
             type: "POST",
             dataType : 'json',
-            url: "/assignTicketPerson",
+            url: "/assignTicketPersonByUsername",
             data: data,
         })
     }
@@ -120,7 +134,7 @@
             person_id : person_id,
             ticket_id : "{{$result['id']}}"
         }
-        console.log(data);
+
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -130,6 +144,43 @@
             url: "/unassignTicketPerson",
             data: data,
         })
+    }
+
+    function getSuggestions(event)
+    {
+        var SearchString = event.target.value;
+        ticketPersonSearchText = SearchString
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            dataType : 'json',
+            url: "/getUserAutoFill",
+            data: {
+            username : SearchString,
+            },
+
+            success: function (data) {
+
+                var userSuggestions = [];
+                for (let index = 0; index < data.length; index++) {
+                    const user = data[index];
+                    userSuggestions.push(user.username);
+                }
+
+                console.log(userSuggestions);
+
+                $(event.target).autocomplete({
+                    source: userSuggestions
+                })
+            },
+        })
+
+
+
+        
     }
 
     $(document).ready(function() {

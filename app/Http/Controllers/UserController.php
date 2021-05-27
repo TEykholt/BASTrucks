@@ -32,9 +32,32 @@ class UserController extends Controller
         $kpiData = kpiModel::get();
         return view('profile')->with('userData', $user)->with('kpiData', $kpiData);
     }
+
     function getUser(Request $request)
     {
-        $user = User::where("id", $request->id)->get();
-        return $user;
+        $users = User::where("id", $request->id)->get();
+
+        if ($users != null) {
+            return $users[0];
+        }
+
+        return $users;
+    }
+
+    function getUserByUserName(Request $request)
+    {
+        $users = User::where("username", $request->username)->get();
+
+        if ($users != null) {
+            return $users[0];
+        }
+
+        return $users;
+    }
+
+    function getAutoCompleteUsers(Request $request){
+        if($request->has('username')){
+            return User::select("username")->where('username','like','%'.$request->input('username').'%')->get();
+        }
     }
 }
