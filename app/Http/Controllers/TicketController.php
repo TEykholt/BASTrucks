@@ -26,19 +26,19 @@ class TicketController extends Controller
     function loadDashboard(Request $repuest) {
         //ToDo: implement permissions
 
-        auth()->user()->assignRole("view own tickets");
+        //auth()->user()->assignRole("view own tickets");
         if ( $repuest) {
             switch ($repuest->dashType) {
                 case 'myTickets':
                     return $this->getTicketsFromUser();
                     break;
 
-                case 'myAssigned':
-                    return $this->getAssignedTicketsFromUser();
-                    break;
-
                 case 'myDepartment':
                     return $this->getTicketsFromUserDepartment();
+                    break;
+
+                case 'myAssigned':
+                    return $this->getAssignedTicketsFromUser();
                     break;
 
                 case 'allTickets':
@@ -152,7 +152,7 @@ class TicketController extends Controller
     }
 
     function getTicketsFromUserDepartment() {
-        if (auth()->user()->can("view own department tickets")) {
+        if (!auth()->user()->can("view own department tickets")) {
             abort(403);
         }
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
