@@ -11,8 +11,7 @@ class FeedbackController extends Controller
     {
         $Feedback = new FeedbackModel;
         $Feedback->ticket_id = $request->ticket_id;
-        $Feedback->pros = $request->pros;
-        $Feedback->cons = $request->cons;
+        $Feedback->FeedbackBox = $request->FeedbackBox;
         $Feedback->score = $request->Score;
         $Feedback->save();
         return redirect('http://127.0.0.1:8000/');

@@ -12,4 +12,7 @@ class kpiController extends Controller
 
        return view('kpi')->with('results' , $data);
     }
+    function UpdateKPIs(){
+        
+    }
 }
