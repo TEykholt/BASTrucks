@@ -56,8 +56,9 @@
             <h4 class="pt-2">Employees</h4>
             
             @foreach($AssignedPersons as $assignedPerson)
-            <div class="d-flex"> {{$assignedPerson['name']}} <a value="{{$assignedPerson['id']}}"  class="ml-auto" href="#">Remove from ticket</a></div>
-            @endforeach
+                <div class="d-flex"> {{$assignedPerson['name']}} <a class="assignedPerson ml-auto" href="#" onclick='removeTicketPerson(<?= $assignedPerson["id"] ?>)'>Remove from ticket</a></div>
+            @endforeach 
+
         </div>
     </div>
 </div>
@@ -96,7 +97,11 @@
     }
 
     function addTicketPerson(person_id) {
-        var data = {id : person_id}
+
+        var data = {
+            person_id : person_id,
+            ticket_id : "{{$result['id']}}"
+        }
         console.log(data);
 
         $.ajax({
@@ -105,7 +110,24 @@
             },
             type: "POST",
             dataType : 'json',
-            url: "/addTicketPerson",
+            url: "/assignTicketPerson",
+            data: data,
+        })
+    }
+
+    function removeTicketPerson(person_id) {
+        var data = {
+            person_id : person_id,
+            ticket_id : "{{$result['id']}}"
+        }
+        console.log(data);
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
+            dataType : 'json',
+            url: "/unassignTicketPerson",
             data: data,
         })
     }

@@ -117,11 +117,12 @@ class TicketController extends Controller
             ->where('ticket_person.person_id', auth()->user()->id)
             ->get();
 
+        
         $AssignedTickets = array();
         for ($i=0; $i < count($Ticket_Persons); $i++) {
             $Ticket_Person = $Ticket_Persons[$i];
 
-            if (strtolower($Ticket_Person->status) == "assigned") {
+            if (strtolower($Ticket_Person->status) != "unassigned") {
                 array_push($AssignedTickets, $this->GetSingle($Ticket_Person->ticket_id, true)->ticket);
             }
 
