@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [\App\Http\Controllers\TicketController::class, 'loadDashboard']);
 
+Route::get('/adminpanel', 'AdminPannelController@index');
+
+//ticket status
+Route::get('/ticketStatus/delete/{id}', 'TicketStatusController@Delete');
+Route::get('/ticketStatus/create', 'TicketStatusController@create');
+Route::post('/ticketStatus/add', 'TicketStatusController@Add');
+Route::post('/ticketStatus/{id}', 'TicketStatusController@Update');
+Route::get('/ticketStatus/{id}', 'TicketStatusController@edit');
+Route::get('/ticketStatus', 'TicketStatusController@index');
+
+//ticket types
 Route::get('/ticketType/delete/{id}', 'TicketTypeController@Delete');
 Route::get('/ticketType/create', 'TicketTypeController@create');
 Route::post('/ticketType/add', 'TicketTypeController@Add');

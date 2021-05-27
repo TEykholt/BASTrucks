@@ -9,4 +9,8 @@ class statusModel extends Model
 
     protected $table = 'status';
     protected $primaryKey = 'id';
+
+    protected $fillable = [
+        'status'
+    ];
 }

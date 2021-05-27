@@ -60,7 +60,7 @@ class TicketController extends Controller
 
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'department.name as department_name')
             ->where('support_ticket.id', $id)
             ->get();
 
@@ -70,7 +70,7 @@ class TicketController extends Controller
     function getAllTickets(){
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'department.name as department_name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'department.name as department_name')
             ->where('closed_at',  null)
             ->get();
 
@@ -95,14 +95,14 @@ class TicketController extends Controller
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->leftJoin("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
-            ->selectRaw('support_ticket.id, support_ticket.status, subject, type, message, person.name as person_name, department.name as department_name, ticket_person.person_id, (SELECT name FROM person WHERE person.id = ticket_person.person_id) as ticketWorker')
+            ->selectRaw('support_ticket.id, support_ticket.status, subject, type, message, person.username as person_name, department.name as department_name, ticket_person.person_id, (SELECT username FROM person WHERE person.id = ticket_person.person_id) as ticketWorker')
             ->where('support_ticket.person_id', auth()->user()->id)
             ->where('closed_at',  null)
             ->get();
 
         $workerData = TicketModel::join("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
             ->join("person","person.id","=","ticket_person.person_id")
-            ->select('name')
+            ->select('username')
             ->get();
         $status = statusModel::get();
         $types = ticketTypes::get();
@@ -138,7 +138,7 @@ class TicketController extends Controller
     function getTicketsFromUserDepartment() {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'email', 'department.name as department_name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'email', 'department.name as department_name')
             ->where('department.id', auth()->user()->department_id)
             ->where('closed_at',  null)
             ->get();
@@ -153,7 +153,7 @@ class TicketController extends Controller
     function GetSingle($Ticket_id, $TicketOnly) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.name as person_name', 'email', 'department.name as department_name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'email', 'department.name as department_name')
             ->where('support_ticket.id', $Ticket_id)
             ->get();
         $attachment = null; $logs = null;
