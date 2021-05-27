@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\attachmentModel;
 use App\departmentModel;
+use App\FeedbackModel;
 use App\kpiModel;
 use App\personSettingsModel;
 use App\TicketModel;
@@ -11,6 +12,7 @@ use App\TicketLogModel;
 use App\ticketTypes;
 use App\statusModel;
 use App\TicketPersonModel;
+use App\Http\Controllers\TicketPersonController;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -83,11 +85,49 @@ class TicketController extends Controller
             array_push($allKpi, $kpi[0]["kpi"]);
             //array_push($allKpi, $kpi["result"]);
         }
-        
+
+        $allKpiResults = ["AVR", "AVTR", "TSF", "AUFS", "CS", "SVI"];
+        foreach($allKpi as $kpi){
+            switch($kpi){
+                case "Avarage ResponseTime":
+                    $avr = TicketModel::join("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
+                        ->selectRaw("AVG(time_to_sec(timediff(ticket_person.created_at, support_ticket.created_at))) / 3600 AS difference")
+                        ->get();
+                    $allKpiResults["AVR"] =  number_format(round($avr[0]["difference"], 2),2);
+                    break;
+                case "Time service factor":
+                    $tsf = TicketModel::leftJoin("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
+                        ->selectRaw("AVG(time_to_sec(timediff(support_ticket.closed_at, support_ticket.created_at))) / 3600 + AVG(time_to_sec(timediff(ticket_person.created_at, support_ticket.created_at))) / 3600 AS count")
+                        ->get();
+                    $allKpiResults["TSF"] =  number_format(round($tsf[0]["count"], 2), 2);
+                    break;
+                case "Avarage total resolution time":
+                    $avrt = TicketModel::selectRaw("AVG(time_to_sec(timediff(closed_at, created_at))) / 3600 AS difference")
+                        ->get();
+                    $allKpiResults["AVTR"] =  number_format(round($avrt[0]["difference"], 2), 2);
+                    break;
+                case "Avarage user feedbackscore":
+                    $avuf = FeedbackModel::selectRaw("avg(score) as avg_score")
+                        ->get();
+                    $allKpiResults["AUFS"] =  round($avuf[0]['avg_score'], 2);
+                    break;
+                case "Customer Satisfaction":
+                    $cs = FeedbackModel::selectRaw("(SELECT count(*) FROM ticket_feedback where FeedbackBox is not null) / count(*) * 100  as percentage")
+                        ->get();
+                    $allKpiResults["CS"] = round($cs[0]['percentage'], 2);
+                    break;
+                case "Status verdeling issues":
+                    $SVI = TicketModel::selectRaw("count(*) as count")
+                        ->whereRaw("closed_at is null")
+                        ->get();
+                    $allKpiResults["SVI"] = $SVI[0]['count'];
+                    break;
+            }
+        }
         $status = statusModel::get();
         $types = ticketTypes::get();
         $departments = departmentModel::get();
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi);
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
     }
 
     function getTicketsFromUser() {
@@ -116,11 +156,12 @@ class TicketController extends Controller
             ->where('ticket_person.person_id', auth()->user()->id)
             ->get();
 
+        
         $AssignedTickets = array();
         for ($i=0; $i < count($Ticket_Persons); $i++) {
             $Ticket_Person = $Ticket_Persons[$i];
 
-            if (strtolower($Ticket_Person->status) == "assigned") {
+            if (strtolower($Ticket_Person->status) != "unassigned") {
                 array_push($AssignedTickets, $this->GetSingle($Ticket_Person->ticket_id, true)->ticket);
             }
 
@@ -204,7 +245,11 @@ class TicketController extends Controller
 
             $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
 
-            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
+            $ticketPersonController = new TicketPersonController();
+            $ticketPersonRequest = new Request();
+            $ticketPersonRequest->ticket_id=$request->id;
+            $assignedPersons=$ticketPersonController->GetTicketPersonsByTicket($ticketPersonRequest);
+            return view("ticketviewer")->with("AssignedPersons", $assignedPersons)->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
         }
         else {
             $this->loadDashboard(new Request());
