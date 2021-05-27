@@ -26,6 +26,16 @@ class TicketController extends Controller
     function loadDashboard(Request $repuest) {
         //ToDo: implement permissions
 
+        $DefaultRoles = [          
+            "ticket input",
+            "feedback input",
+
+            "view ticketviewer",
+            "view own tickets",
+
+            "edit own password",
+        ];
+        auth()->user()->assignRole($DefaultRoles);
         //auth()->user()->assignRole("view own tickets");
         if ( $repuest) {
             switch ($repuest->dashType) {
