@@ -46,7 +46,7 @@ class UserController extends Controller
         $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
             ->get();
 
-        return redirect('/?dashType=allTickets');
+        return redirect('/');
     }
 
     function getUser(Request $request)
