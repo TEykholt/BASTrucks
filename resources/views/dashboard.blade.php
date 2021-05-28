@@ -1,37 +1,5 @@
 @include("incl/header")
-@isset($allKpis)
-    <div class="d-flex">
-    @foreach($allKpis as $kpi)
-        <div class="card m-2" style="width: 18rem;">
-            <div class="card-header">
-                {{$kpi}}
-            </div>
-            <div class="card-body">
-                    @switch($kpi)
-                        @case("Avarage ResponseTime")
-                                <p class="card-text"><i class="fas fa-stopwatch"></i>&nbsp{{$allKpiResults["AVR"]}} sec<p/>
-                            @break
-                        @case("Avarage total resolution time")
-                                <p class="card-text"><i class="far fa-clock"></i>&nbsp{{$allKpiResults["AVTR"]}} sec<p/>
-                            @break
-                        @case("Time service factor")
-                                <p class="card-text"><i class="fas fa-hourglass-half"></i>&nbsp{{$allKpiResults["TSF"]}}  sec<p/>
-                            @break
-                        @case("Avarage user feedbackscore")
-                                <p class="card-text"><i class="far fa-star"></i>&nbsp{{$allKpiResults["AUFS"]}}<p/>
-                            @break
-                        @case("Customer Satisfaction")
-                                <p class="card-text"><i class="far fa-thumbs-up"></i>&nbsp{{$allKpiResults["CS"]}}%<p/>
-                            @break
-                        @case("Status verdeling issues")
-                                <p class="card-text"><i class="fas fa-clipboard-list"></i>&nbsp{{$allKpiResults["SVI"]}}<p/>
-                            @break
-                    @endswitch
-            </div>
-        </div>
-    @endforeach
-    </div>
-@endisset
+@include("KPI")
 <div class="d-flex pt-3 pb-3">
     <h1 class="mt-4 align-middle">Dashboard</h1>
     <div class="Filter-List ml-auto">

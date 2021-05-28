@@ -89,58 +89,8 @@ class TicketController extends Controller
             ->where('closed_at',  null)
             ->get();
 
-        $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
-            ->get();
-
-
-        $allKpi = [];
-        $allKpiResults = ["AVR", "AVTR", "TSF", "AUFS", "CS", "SVI"];
-        if (auth()->user()->can("view kpi")) {
-            foreach($person_settings as $wantedKpi){
-                $kpi = kpiModel::where("id",$wantedKpi["preferd_kpi"])
-                    ->get();
-                array_push($allKpi, $kpi[0]["kpi"]);
-                //array_push($allKpi, $kpi["result"]);
-            }
-
-            foreach($allKpi as $kpi){
-                switch($kpi){
-                    case "Avarage ResponseTime":
-                        $avr = TicketModel::join("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
-                            ->selectRaw("AVG(time_to_sec(timediff(ticket_person.created_at, support_ticket.created_at))) / 3600 AS difference")
-                            ->get();
-                        $allKpiResults["AVR"] =  number_format(round($avr[0]["difference"], 2),2);
-                        break;
-                    case "Time service factor":
-                        $tsf = TicketModel::leftJoin("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
-                            ->selectRaw("AVG(time_to_sec(timediff(support_ticket.closed_at, support_ticket.created_at))) / 3600 + AVG(time_to_sec(timediff(ticket_person.created_at, support_ticket.created_at))) / 3600 AS count")
-                            ->get();
-                        $allKpiResults["TSF"] =  number_format(round($tsf[0]["count"], 2), 2);
-                        break;
-                    case "Avarage total resolution time":
-                        $avrt = TicketModel::selectRaw("AVG(time_to_sec(timediff(closed_at, created_at))) / 3600 AS difference")
-                            ->get();
-                        $allKpiResults["AVTR"] =  number_format(round($avrt[0]["difference"], 2), 2);
-                        break;
-                    case "Avarage user feedbackscore":
-                        $avuf = FeedbackModel::selectRaw("avg(score) as avg_score")
-                            ->get();
-                        $allKpiResults["AUFS"] =  round($avuf[0]['avg_score'], 2);
-                        break;
-                    case "Customer Satisfaction":
-                        $cs = FeedbackModel::selectRaw("(SELECT count(*) FROM ticket_feedback where FeedbackBox is not null) / count(*) * 100  as percentage")
-                            ->get();
-                        $allKpiResults["CS"] = round($cs[0]['percentage'], 2);
-                        break;
-                    case "Status verdeling issues":
-                        $SVI = TicketModel::selectRaw("count(*) as count")
-                            ->whereRaw("closed_at is null")
-                            ->get();
-                        $allKpiResults["SVI"] = $SVI[0]['count'];
-                        break;
-                }
-            }
-        }
+        $allKpi = $this->getUserKPI();
+        $allKpiResults = $this->getKpi();
 
         $status = statusModel::get();
         $types = ticketTypes::get();
@@ -168,7 +118,10 @@ class TicketController extends Controller
         $types = ticketTypes::get();
         $departments = departmentModel::get();
 
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments);
+        $allKpi = $this->getUserKPI();
+        $allKpiResults = $this->getKpi();
+
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
     }
 
     function getAssignedTicketsFromUser() {
@@ -427,5 +380,67 @@ class TicketController extends Controller
 
         TicketModel::where('id', $id)
             ->update(['message' => $message, "updated_at" => Carbon::now()]);
+    }
+
+    function getUserKPI(){
+        $allKpi = [];
+        $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
+            ->get();
+        foreach($person_settings as $wantedKpi){
+            $kpi = kpiModel::where("id",$wantedKpi["preferd_kpi"])
+                ->get();
+            array_push($allKpi, $kpi[0]["kpi"]);
+            //array_push($allKpi, $kpi["result"]);
+        }
+
+        return $allKpi;
+    }
+    function getKpi(){
+        $allKpi = $this->getUserKPI();
+        $allKpiResults = ["AVR", "AVTR", "TSF", "AUFS", "CS", "SVI"];
+        if (auth()->user()->can("view kpi")) {
+
+
+            foreach($allKpi as $kpi){
+                switch($kpi){
+                    case "Avarage ResponseTime":
+                        $avr = TicketModel::join("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
+                            ->selectRaw("AVG(ROUND(time_to_sec((TIMEDIFF(support_ticket.created_at, ticket_person.created_at))) / 3600)) AS difference")
+                            ->get();
+                        $allKpiResults["AVR"] =  number_format(round($avr[0]["difference"], 2),2);
+                        break;
+                    case "Time service factor":
+                        $tsf = TicketModel::leftJoin("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
+                            ->selectRaw("AVG(ROUND(time_to_sec((TIMEDIFF(support_ticket.closed_at, support_ticket.created_at))) / 3600)) + AVG(ROUND(time_to_sec((TIMEDIFF(ticket_person.created_at, support_ticket.created_at))) / 3600)) AS count")
+                            ->get();
+                        $allKpiResults["TSF"] =  number_format(round($tsf[0]["count"], 2), 2);
+                        break;
+                    case "Avarage total resolution time":
+                        $avrt = TicketModel::selectRaw("AVG(ROUND(time_to_sec((TIMEDIFF(closed_at, created_at))) / 3600)) AS difference")
+                            ->get();
+
+                        $allKpiResults["AVTR"] =  number_format(round($avrt[0]["difference"], 2), 2);
+                        break;
+                    case "Avarage user feedbackscore":
+                        $avuf = FeedbackModel::selectRaw("avg(score) as avg_score")
+                            ->get();
+                        $allKpiResults["AUFS"] =  round($avuf[0]['avg_score'], 2);
+                        break;
+                    case "Customer Satisfaction":
+                        $cs = FeedbackModel::selectRaw("(SELECT count(*) FROM ticket_feedback where FeedbackBox is not null) / count(*) * 100  as percentage")
+                            ->get();
+                        $allKpiResults["CS"] = round($cs[0]['percentage'], 2);
+                        break;
+                    case "Status verdeling issues":
+                        $SVI = TicketModel::selectRaw("count(*) as count")
+                            ->whereRaw("closed_at is null")
+                            ->get();
+                        $allKpiResults["SVI"] = $SVI[0]['count'];
+                        break;
+                }
+            }
+            return $allKpiResults;
+        }
+
     }
 }
