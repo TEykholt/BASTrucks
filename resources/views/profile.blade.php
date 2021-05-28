@@ -40,6 +40,7 @@
         </div>
         <div class="col-lg-6">
             <form method="POST" action="/userEdit/{{$userData[0]['name']}}">
+                @csrf
                 <div class="form-group">
                     <label for="firstname">Email</label>
                     <input type="text" class="form-control" id="email" name="email" placeholder="{{$userData[0]['email']}}">

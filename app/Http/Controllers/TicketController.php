@@ -27,7 +27,7 @@ class TicketController extends Controller
     function loadDashboard(Request $repuest) {
         //ToDo: implement permissions
 
-        $DefaultRoles = [          
+        $DefaultRoles = [
             "admin"
         ];
         auth()->user()->assignRole($DefaultRoles);
@@ -79,7 +79,7 @@ class TicketController extends Controller
     }
 
     function getAllTickets(){
-        if (auth()->user()->can("view all tickets")) {
+        if (!auth()->user()->can("view all tickets")) {
             abort(403);
         }
 
@@ -92,7 +92,7 @@ class TicketController extends Controller
         $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
             ->get();
 
-        
+
         $allKpi = [];
         $allKpiResults = ["AVR", "AVTR", "TSF", "AUFS", "CS", "SVI"];
         if (auth()->user()->can("view kpi")) {
@@ -102,7 +102,7 @@ class TicketController extends Controller
                 array_push($allKpi, $kpi[0]["kpi"]);
                 //array_push($allKpi, $kpi["result"]);
             }
-    
+
             foreach($allKpi as $kpi){
                 switch($kpi){
                     case "Avarage ResponseTime":
@@ -180,7 +180,7 @@ class TicketController extends Controller
             ->where('ticket_person.person_id', auth()->user()->id)
             ->get();
 
-        
+
         $AssignedTickets = array();
         for ($i=0; $i < count($Ticket_Persons); $i++) {
             $Ticket_Person = $Ticket_Persons[$i];

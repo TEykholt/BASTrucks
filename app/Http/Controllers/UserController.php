@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\kpiModel;
 use App\personSettingsModel;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -20,7 +21,7 @@ class UserController extends Controller
         return view('profile')->with('userData', $user)->with('kpiData', $kpiData)->with('personSetting', $person_settings);
     }
     function updateUserSettings(Request $request){
-        $user = User::where("username", $request->username)
+        $user = User::where("id", auth()->user()->id)
             ->get();
 
         $kpiData = kpiModel::get();
@@ -75,5 +76,21 @@ class UserController extends Controller
         }
     }
 
-    
+    function updateUser(Request  $request){
+        //TODO: Hash user password
+        $FullName = $request->firstname." ".$request->lastname;
+
+        User::where("id", auth()->user()->id)
+            ->update(['username' => $FullName, "email" => $request->email, 'password' => $request->password]);
+
+
+        $user = User::where("id", auth()->user()->id)
+            ->get();
+
+        $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
+            ->get();
+
+        $kpiData = kpiModel::get();
+        return view('profile')->with('userData', $user)->with('kpiData', $kpiData)->with('personSetting', $person_settings);
+    }
 }
