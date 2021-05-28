@@ -7,6 +7,7 @@ use App\personSettingsModel;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -79,9 +80,9 @@ class UserController extends Controller
     function updateUser(Request  $request){
         //TODO: Hash user password
         $FullName = $request->firstname." ".$request->lastname;
-
+        $password = Hash::make($request->password);
         User::where("id", auth()->user()->id)
-            ->update(['username' => $FullName, "email" => $request->email, 'password' => $request->password]);
+            ->update(['username' => $FullName, "email" => $request->email, 'password' => $password]);
 
 
         $user = User::where("id", auth()->user()->id)
