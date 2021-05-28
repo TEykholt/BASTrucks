@@ -44,7 +44,7 @@ class UserController extends Controller
         $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
             ->get();
 
-        return view('profile')->with('userData', $user)->with('kpiData', $kpiDataReturn)->with('personSetting', $person_settings);
+        return redirect('/?dashType=allTickets');
     }
 
     function getUser(Request $request)
@@ -74,4 +74,6 @@ class UserController extends Controller
             return User::select("username")->where('username','like','%'.$request->input('username').'%')->get();
         }
     }
+
+    
 }
