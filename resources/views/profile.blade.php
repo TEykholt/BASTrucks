@@ -54,7 +54,7 @@
                     <input required type="text" class="form-control" id="lastname" name="lastname" placeholder="{{$userData[0]['name']}}">
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
+                    <label for="exampleInputPassword1">New password</label>
                     <input required type="password" class="form-control" id="exampleInputPassword1" name="password" >
                 </div>
                 <input required type="submit" class="btn btn-primary" value="Submit"/>
