@@ -59,7 +59,10 @@ Route::post('/', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::post('/ticketviewer', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);
 
 Route::get('/profile/{name}', [\App\Http\Controllers\UserController::class, 'getProfilePage']);
-Route::post('/userPreference/{name}', [\App\Http\Controllers\UserController::class, 'updateUserSettings']);
+
+Route::post('/userPreference/', [\App\Http\Controllers\UserController::class, 'updateUserSettings']);
+Route::post('/userEdit/', [\App\Http\Controllers\UserController::class, 'updateUser']);
+
 
 Route::get('/ticketviewer/{id}', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);
 

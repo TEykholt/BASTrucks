@@ -1,33 +1,33 @@
-@include("incl/header")
-        <h1 class="mt-2">KPIs</h1>
-        <table class="table">
-            <tr>
-                <th>kpi_id</th>
-                <th>AVresponseTime</th>
-                <th>AVtotalResolutiontime</th>
-                <th>timeServiceFactor</th>
-                <th>AVuseFeedbackScore</th>
-                <th>customerSatisfaction</th>
-                <th>statusVerdelingIssues</th>
-                <th>Created_At</th>
-                <th>Updated_At</th>
-            </tr>
-
-            @foreach($results as $result)
-                <tr>
-                    <td>{{$result['id']}}</td>
-                    <td>{{$result['AVresponseTime']}}</td>
-                    <td>{{$result['AVtotalResolutiontime']}}</td>
-                    <td>{{$result['timeServiceFactor']}}</td>
-                    <td>{{$result['AVuseFeedbackScore']}}</td>
-                    <td>{{$result['customerSatisfaction']}}</td>
-                    <td>{{$result['statusVerdelingIssues']}}</td>
-                    <td>{{$result['created_at']}}</td>
-                    <td>{{$result['updated_at']}}</td>
-                </tr>
-            @endforeach
-        </table>
+@isset($allKpis)
+    <div class="d-flex">
+        @foreach($allKpis as $kpi)
+            <div class="card m-2" style="width: 18rem;">
+                <div class="card-header">
+                    {{$kpi}}
+                </div>
+                <div class="card-body">
+                    @switch($kpi)
+                        @case("Avarage ResponseTime")
+                        <p class="card-text"><i class="fas fa-stopwatch"></i>&nbsp{{$allKpiResults["AVR"]}} min<p/>
+                        @break
+                        @case("Avarage total resolution time")
+                        <p class="card-text"><i class="far fa-clock"></i>&nbsp{{$allKpiResults["AVTR"]}} min<p/>
+                        @break
+                        @case("Time service factor")
+                        <p class="card-text"><i class="fas fa-hourglass-half"></i>&nbsp{{$allKpiResults["TSF"]}}  min<p/>
+                        @break
+                        @case("Avarage user feedbackscore")
+                        <p class="card-text"><i class="far fa-star"></i>&nbsp{{$allKpiResults["AUFS"]}}<p/>
+                        @break
+                        @case("Customer Satisfaction")
+                        <p class="card-text"><i class="far fa-thumbs-up"></i>&nbsp{{$allKpiResults["CS"]}}%<p/>
+                        @break
+                        @case("Status verdeling issues")
+                        <p class="card-text"><i class="fas fa-clipboard-list"></i>&nbsp{{$allKpiResults["SVI"]}}<p/>
+                        @break
+                    @endswitch
+                </div>
+            </div>
+        @endforeach
     </div>
-
-    </body>
-</html>
+@endisset
