@@ -14,7 +14,7 @@
             <div class="card-body">
                 <h5 class="card-title">Status</h5>
                 <p class="card-text">Edit the type of the avaible statuses.</p>
-                <a href="/ticketType" class="btn btn-primary">Mange</a>
+                <a href="/ticketStatus" class="btn btn-primary">Mange</a>
             </div>
         </div>
         <div class="card m-2" style="width: 20rem;">
@@ -33,7 +33,7 @@
                 <a href="/ticketType" class="btn btn-primary">Mange</a>
             </div>
         </div>
-        <div class="card col-3 m-2" style="width: 20rem;">
+        <div class="card m-2" style="width: 20rem;">
             <div class="card-body">
                 <h5 class="card-title">Users</h5>
                 <p class="card-text">Edit the type of the departments kpi.</p>
