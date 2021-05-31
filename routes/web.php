@@ -71,6 +71,8 @@ Route::get('/profile/{name}', [\App\Http\Controllers\UserController::class, 'get
 Route::post('/userPreference', [\App\Http\Controllers\UserController::class, 'updateUserSettings']);
 Route::post('/userEdit', [\App\Http\Controllers\UserController::class, 'updateUser']);
 
+Route::post('/userEdit', [\App\Http\Controllers\UserController::class, 'updateUser']);
+
 
 Route::get('/ticketviewer/{id}', [\App\Http\Controllers\TicketController::class, 'getTicketViewer']);
 
