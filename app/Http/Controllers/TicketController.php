@@ -167,7 +167,11 @@ class TicketController extends Controller
         $types = ticketTypes::get();
         $departments = departmentModel::get();
 
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status);
+        $allKpi = $this->getUserKPI();
+        $allKpiResults = $this->getKpi();
+
+
+        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
     }
 
     function GetSingle($Ticket_id, $TicketOnly) {
