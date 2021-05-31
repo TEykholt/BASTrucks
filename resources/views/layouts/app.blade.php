@@ -23,7 +23,7 @@
     <div id="app">
         <div class="container top-header">
             <div class="d-flex">
-                <img class="logo" src="{{ URL::asset('img/logo.png')}}" alt="logo">
+                <img class="logo" src="{{ asset('img/logo.png')}}" alt="logo">
             </div>
         </div>
         <nav class="navbar navbar-expand-lg">
