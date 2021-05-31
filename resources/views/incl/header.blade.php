@@ -22,8 +22,8 @@
         <img class="logo" src="{{ asset('img/logo.png')}}" alt="logo">
         <div class="ml-auto  u-info">
             <a><i class="fas fa-bell"></i></a>
-            <a href="/profile/{{ Auth::user()->username }}" >{{ Auth::user()->username }}</a>
-            <img class="icon" src="{{ URL::asset('img/icon.png')}}" alt="icon">
+            <a href="/profile/{{ Auth::user()->username }}" ><strong>{{ Auth::user()->username }}</strong></a>
+            <!-- <img class="icon" src="{{ URL::asset('img/icon.png')}}" alt="icon"> -->
             <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 {{ __('Logout') }}
             </a>
