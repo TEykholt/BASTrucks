@@ -189,3 +189,7 @@ p{
     font-size: 20px;
     text-align: left;
 }
+.trow:hover{
+    background-color: #676a81;
+    color: white;
+}

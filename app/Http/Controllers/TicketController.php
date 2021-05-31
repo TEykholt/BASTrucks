@@ -281,8 +281,8 @@ class TicketController extends Controller
         $ticketlog->created_by = auth()->user()->name;
         $ticketlog->save();
 
-        $mailcontroller = new MailController();
-        $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
+        //$mailcontroller = new MailController();
+        //$mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
 
         return $this->loadDashboard(new Request());
     }
