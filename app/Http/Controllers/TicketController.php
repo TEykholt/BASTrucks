@@ -291,8 +291,7 @@ class TicketController extends Controller
         TicketModel::where('id', $id)
             ->update(['status' => "closed", "closed_at" => Carbon::now()]);
 
-        $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->where('support_ticket.id', $id)->first();
-
+        $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->select("username", "support_ticket.id", "person.email")->where('support_ticket.id', $id)->first();
         $ticketlog = new TicketLogModel;
         $ticketlog->ticket_id = $id;
         $ticketlog->message = "ticket was closed by " . auth()->user()->name;
@@ -307,7 +306,7 @@ class TicketController extends Controller
 
     function openTicket($id){
         TicketModel::where('id', $id)
-            ->update(['status' => "open", "updated_at" => Carbon::now()]);
+            ->update(['status' => "open", "updated_at" => Carbon::now(), "closed_at" => null]);
 
         $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->where('support_ticket.id', $id)->first();
 
