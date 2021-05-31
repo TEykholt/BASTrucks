@@ -25,6 +25,10 @@ class UserController extends Controller
         $user = User::where("id", auth()->user()->id)
             ->get();
 
+        if (count($user) <= 0){
+            abort(403);
+        }
+        
         $kpiData = kpiModel::get();
         foreach($kpiData as $kpi){
             $kpiRequest = "kpi".$kpi['id'];

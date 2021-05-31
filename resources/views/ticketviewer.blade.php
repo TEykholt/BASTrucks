@@ -42,13 +42,9 @@
     <div class="col-lg-7">
         <h4 class="pt-2">{{$result['subject']}}</h4>
             @can("edit ticket")
-                <textarea id="message" class="form-control text-area">
-                    {{$result['message']}}
-                </textarea>
+                <textarea id="message" class="form-control text-area">{{ltrim(rtrim($result['message']))}}</textarea>
             @else
-                <div id="message" class="form-control text-area">
-                    {{$result['message']}}
-                </div>
+                <div id="message" class="form-control text-area">{{ltrim(rtrim($result['message']))}}</div>
             @endcan
     </div>
     <div class="col-lg-5 ">

@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-lg-5">
             @isset($kpiData)
-                <form method="POST" action="/userPreference/">
+                <form method="POST" action="/userPreference">
                     @foreach($kpiData as $kpi)
 
                         <p class="font-weight-bold">{{$kpi['kpi']}}</p>
@@ -39,7 +39,7 @@
             @endisset
         </div>
         <div class="col-lg-6">
-            <form method="POST" action="/userEdit/">
+            <form method="POST" action="/userEdit">
                 @csrf
                 <div class="form-group">
                     <label for="firstname">Email</label>
