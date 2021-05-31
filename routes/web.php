@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [\App\Http\Controllers\TicketController::class, 'loadDashboard']);
 
-Route::get('/adminpanel', 'AdminPannelController@index');
+Route::get('/admin/Panel', 'AdminPannelController@index');
+Route::get('/admin/ticketType', 'TicketTypeController@index');
+Route::get('/admin/ticketStatus', 'TicketStatusController@index');
 
 //ticket status
 Route::get('/ticketStatus/delete/{id}', 'TicketStatusController@Delete');
@@ -22,7 +24,6 @@ Route::get('/ticketStatus/create', 'TicketStatusController@create');
 Route::post('/ticketStatus/add', 'TicketStatusController@Add');
 Route::post('/ticketStatus/{id}', 'TicketStatusController@Update');
 Route::get('/ticketStatus/{id}', 'TicketStatusController@edit');
-Route::get('/ticketStatus', 'TicketStatusController@index');
 
 //ticket types
 Route::get('/ticketType/delete/{id}', 'TicketTypeController@Delete');
@@ -30,7 +31,6 @@ Route::get('/ticketType/create', 'TicketTypeController@create');
 Route::post('/ticketType/add', 'TicketTypeController@Add');
 Route::post('/ticketType/{id}', 'TicketTypeController@Update');
 Route::get('/ticketType/{id}', 'TicketTypeController@edit');
-Route::get('/ticketType', 'TicketTypeController@index');
 
 Route::post('/ticketInput/addTicket', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::get('/ticketInput', [\App\Http\Controllers\TicketController::class, 'loadTicketInput']);

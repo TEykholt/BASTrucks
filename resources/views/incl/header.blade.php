@@ -3,9 +3,9 @@
 <head>
     <title>Dashboard</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="{{ URL::asset('css/app.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/app.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="{{ URL::asset('css/style.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/style.css')}}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/3daacf6a8c.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -19,7 +19,7 @@
 @else
 <div class="container top-header">
     <div class="d-flex">
-        <img class="logo" src="{{ URL::asset('img/logo.png')}}" alt="logo">
+        <img class="logo" src="{{ asset('img/logo.png')}}" alt="logo">
         <div class="ml-auto  u-info">
             <a><i class="fas fa-bell"></i></a>
             <a href="/profile/{{ Auth::user()->username }}" >{{ Auth::user()->username }}</a>
