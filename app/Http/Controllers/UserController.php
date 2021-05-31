@@ -64,7 +64,7 @@ class UserController extends Controller
     {
         $users = User::where("username", $request->username)->get();
 
-        if ($users != null) {
+        if ($users != null || count($users) > 1) {
             return $users[0];
         }
 
@@ -78,7 +78,6 @@ class UserController extends Controller
     }
 
     function updateUser(Request  $request){
-        //TODO: Hash user password
         $FullName = $request->firstname." ".$request->lastname;
         $password = Hash::make($request->password);
         User::where("id", auth()->user()->id)

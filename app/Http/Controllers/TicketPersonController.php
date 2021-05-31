@@ -48,18 +48,29 @@ class TicketPersonController extends Controller
         if (!auth()->user()->can("assign employee")) {
             abort(403);
         }
+        if ($request->username == null || $request->username == "")
+        {
+            abort(403);
+        }
 
         $userController = new UserController();
         $User = $userController->getUserByUserName($request);
-        $ticket_person = TicketPersonModel::select('status')->where('person_id', $User->id)->where('ticket_id', $request->ticket_id)->get();
         
-        if(count($ticket_person)<=0)
-        {
-            return $this->TicketPersonAdd($request);
+        if ($User) {
+            $ticket_person = TicketPersonModel::select('status')->where('person_id', $User->id)->where('ticket_id', $request->ticket_id)->get();
+        
+            $request->person_id = $User->id;
+            if(count($ticket_person)<= 0)
+            {
+                return $this->TicketPersonAdd($request);
+            }
+            else if($ticket_person[0]->status =="unassigned")
+            {
+                return $this->TicketPersonUpdate($request);
+            }
         }
-        else if($ticket_person[0]->status=="unassigned")
-        {
-            return $this->TicketPersonUpdate($request);
+        else{
+            abort(403);
         }
     }
 

@@ -88,7 +88,7 @@
             <div class="employee employee_background mt-2">
                 <h4 class="pt-2">Assign an Employees</h4>
 
-                <input class="form-control" name="searchbox" id="input" type="text" placeholder="Enter name" onkeyup="getSuggestions(event)">
+                <input class="form-control" name="searchbox" id="input" type="text" placeholder="Enter name" onchange="getSuggestions(event)" onkeyup="getSuggestions(event)">
                 
                 <input id="userSearchbox" type="submit" class="btn btn-primary mt-2 btn-view" value="Assign" onclick="addTicketPerson()">
             </div>
@@ -135,12 +135,11 @@
 
     function addTicketPerson() 
     {
-
-        console.log(ticketPersonSearchText);
         var data = {
             username : ticketPersonSearchText,
             ticket_id : "{{$result['id']}}"
         }
+        
         console.log(data);
 
         $.ajax({
@@ -151,6 +150,10 @@
             dataType : 'json',
             url: "/assignTicketPersonByUsername",
             data: data,
+
+            succes: function(data){
+                console.log(data);
+            }
         })
     }
 
@@ -174,7 +177,7 @@
     function getSuggestions(event)
     {
         var SearchString = event.target.value;
-        ticketPersonSearchText = SearchString
+        ticketPersonSearchText = SearchString;
 
         $.ajax({
             headers: {
@@ -195,7 +198,7 @@
                     userSuggestions.push(user.username);
                 }
 
-                console.log(userSuggestions);
+                //console.log(userSuggestions);
 
                 $(event.target).autocomplete({
                     source: userSuggestions
@@ -203,9 +206,6 @@
             },
         })
 
-
-
-        
     }
 
     $(document).ready(function() {
