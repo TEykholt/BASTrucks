@@ -223,7 +223,6 @@ class TicketController extends Controller
 
    function getTicketViewer(Request $request) {
         //ToDo: Check if user has permissions to view this ticket
-
         if (!auth()->user()->can("view ticketviewer")) {
             abort(403);
         }
@@ -235,9 +234,10 @@ class TicketController extends Controller
 
             $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
 
+
             $ticketPersonController = new TicketPersonController();
             $ticketPersonRequest = new Request();
-            $ticketPersonRequest->ticket_id=$request->id;
+            $ticketPersonRequest->ticket_id = $request->id;
             $assignedPersons=$ticketPersonController->GetTicketPersonsByTicket($ticketPersonRequest);
             return view("ticketviewer")->with("AssignedPersons", $assignedPersons)->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
         }
