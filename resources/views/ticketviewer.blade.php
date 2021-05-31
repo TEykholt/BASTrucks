@@ -67,18 +67,22 @@
             </form>
         @endcan
 
+        
+        @isset($AssignedPersons)
+        @if(count($AssignedPersons)>0)
         <div class="employee employee_background mt-2">
             <h4 class="pt-2">Assigned Employees</h4>
-            
-            @foreach($AssignedPersons as $assignedPerson)
-                <div class="d-flex"> {{$assignedPerson['name']}}
-                    @can("unassign employee")
-                        <a class="assignedPerson ml-auto" href="#" onclick='removeTicketPerson(<?= $assignedPerson["id"] ?>)'>Remove from ticket</a>
-                    @endcan
-                </div>
-            @endforeach 
 
-        </div>
+                @foreach($AssignedPersons as $assignedPerson)
+                    <div class="d-flex"> {{$assignedPerson['username']}}
+                        @can("unassign employee")
+                            <a class="assignedPerson ml-auto" href="#" onclick='removeTicketPerson(<?= $assignedPerson["id"] ?>)'> Remove from ticket</a>
+                        @endcan
+                    </div>
+                @endforeach
+            </div>
+        @endif
+        @endisset
 
         @can("assign employee")
             <div class="employee employee_background mt-2">
@@ -135,8 +139,6 @@
             username : ticketPersonSearchText,
             ticket_id : "{{$result['id']}}"
         }
-        
-        console.log(data);
 
         $.ajax({
             headers: {

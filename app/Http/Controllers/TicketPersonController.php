@@ -20,7 +20,7 @@ class TicketPersonController extends Controller
         $ticketperson = new TicketPersonModel;
         $ticketperson->person_id = $request->person_id;
         $ticketperson->ticket_id = $request->ticket_id;
-        $ticketperson->status = "open";
+        $ticketperson->status = "assigned";
         $ticketperson->save();
     }
 
@@ -45,6 +45,7 @@ class TicketPersonController extends Controller
 
     function TicketPersonAssignByUsername(Request $request)
     {
+
         if (!auth()->user()->can("assign employee")) {
             abort(403);
         }
@@ -62,10 +63,12 @@ class TicketPersonController extends Controller
             $request->person_id = $User->id;
             if(count($ticket_person)<= 0)
             {
+                //abort(404);
                 return $this->TicketPersonAdd($request);
             }
             else if($ticket_person[0]->status =="unassigned")
             {
+                //abort(405);
                 return $this->TicketPersonUpdate($request);
             }
         }
@@ -77,7 +80,7 @@ class TicketPersonController extends Controller
     function TicketPersonAdd(Request $request)
     {
         TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
-        ->update(['status' => "assigned"]);
+        ->insert(['status' => "assigned", 'person_id' => $request->person_id, 'ticket_id' => $request->ticket_id]);
     }
 
     function TicketPersonUpdate(Request $request)
@@ -103,7 +106,7 @@ class TicketPersonController extends Controller
 
     function GetTicketPersonsByTicket(Request $request)
     {
-        $ticket_persons=TicketPersonModel::where('ticket_id', $request->ticket_id)->where('status', "assigned")->get();
+        $ticket_persons=TicketPersonModel::where('ticket_id', $request->ticket_id)->where('status', "assigned")->orwhere('status', "reassigned")->get();
         $userController = new UserController();
         $userRequest = new Request();
         $returnPersons=array();
