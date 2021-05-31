@@ -29,7 +29,7 @@ class TicketStatusController extends Controller
     function Add(Request $request)
     {
         statusModel::create($request->all());
-        return Redirect::to('/ticketStatus');
+        return Redirect::to('admin/ticketStatus');
     }
 
     function Update($id, Request $request)
@@ -37,13 +37,13 @@ class TicketStatusController extends Controller
         $status = statusModel::findOrFail($id);
         $input = $request->all();
         $status->fill($input)->save();
-        return Redirect::to('/ticketStatus');
+        return Redirect::to('admin/ticketStatus');
     }
 
     function Delete($id)
     {
         $status = statusModel::findOrFail($id);
         $status->delete();
-        return Redirect::to('/ticketStatus');
+        return Redirect::to('admin/ticketStatus');
     }
 }

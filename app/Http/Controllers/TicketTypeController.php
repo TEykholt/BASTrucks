@@ -32,7 +32,7 @@ class TicketTypeController extends Controller
     function Add(Request $request)
     {
         ticketTypes::create($request->all());
-        return Redirect::to('/ticketType');
+        return Redirect::to('admin/ticketType');
     }
 
     function Update($id, Request $request)
@@ -40,13 +40,13 @@ class TicketTypeController extends Controller
         $type = ticketTypes::findOrFail($id);
         $input = $request->all();
         $type->fill($input)->save();
-        return Redirect::to('/ticketType');
+        return Redirect::to('admin/ticketType');
     }
 
     function Delete($id)
     {
         $type = ticketTypes::findOrFail($id);
         $type->delete();
-        return Redirect::to('/ticketType');
+        return Redirect::to('admin/ticketType');
     }
 }

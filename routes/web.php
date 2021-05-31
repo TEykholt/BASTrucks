@@ -14,23 +14,23 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [\App\Http\Controllers\TicketController::class, 'loadDashboard']);
 
-Route::get('/admin/Panel', 'AdminPannelController@index');
+Route::get('/admin', 'AdminPannelController@index');
 Route::get('/admin/ticketType', 'TicketTypeController@index');
 Route::get('/admin/ticketStatus', 'TicketStatusController@index');
 
 //ticket status
-Route::get('/ticketStatus/delete/{id}', 'TicketStatusController@Delete');
-Route::get('/ticketStatus/create', 'TicketStatusController@create');
-Route::post('/ticketStatus/add', 'TicketStatusController@Add');
-Route::post('/ticketStatus/{id}', 'TicketStatusController@Update');
-Route::get('/ticketStatus/{id}', 'TicketStatusController@edit');
+Route::get('/admin/ticketStatus/delete/{id}', 'TicketStatusController@Delete');
+Route::get('/admin/ticketStatus/create', 'TicketStatusController@create');
+Route::post('/admin/ticketStatus/add', 'TicketStatusController@Add');
+Route::post('/admin/ticketStatus/{id}', 'TicketStatusController@Update');
+Route::get('/admin/ticketStatus/{id}', 'TicketStatusController@edit');
 
 //ticket types
-Route::get('/ticketType/delete/{id}', 'TicketTypeController@Delete');
-Route::get('/ticketType/create', 'TicketTypeController@create');
-Route::post('/ticketType/add', 'TicketTypeController@Add');
-Route::post('/ticketType/{id}', 'TicketTypeController@Update');
-Route::get('/ticketType/{id}', 'TicketTypeController@edit');
+Route::get('/admin/ticketType/delete/{id}', 'TicketTypeController@Delete');
+Route::get('/admin/ticketType/create', 'TicketTypeController@create');
+Route::post('/admin/ticketType/add', 'TicketTypeController@Add');
+Route::post('/admin/ticketType/{id}', 'TicketTypeController@Update');
+Route::get('/admin/ticketType/{id}', 'TicketTypeController@edit');
 
 Route::post('/ticketInput/addTicket', [\App\Http\Controllers\TicketController::class, 'addTicket']);
 Route::get('/ticketInput', [\App\Http\Controllers\TicketController::class, 'loadTicketInput']);

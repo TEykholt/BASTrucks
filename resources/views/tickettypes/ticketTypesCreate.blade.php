@@ -2,7 +2,7 @@
 
 <h1>Create Type</h1>
 
-<form method="POST" id="input_form" action="/ticketType/add" enctype="multipart/form-data">
+<form method="POST" id="input_form" action="/admin/ticketType/add" enctype="multipart/form-data">
 @csrf
 <div class="form-group">
     <div class="form-group">

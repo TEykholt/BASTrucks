@@ -2,7 +2,7 @@
 
 <h1>Edit</h1>
 
-<form method="POST" id="input_form" action="/ticketStatus/{{$id}}" enctype="multipart/form-data">
+<form method="POST" id="input_form" action="/admin/ticketStatus/{{$id}}" enctype="multipart/form-data">
 @csrf
 <div class="form-group">
     <div class="form-group">

@@ -13,13 +13,13 @@
         @foreach($status as $result)
         <tr>
             <td> {{$result->status}} </td>
-            <td> <p><a href="/ticketStatus/{{$result->id}}" class="btn btn-dark btn-large">Edit</a><p></td>
-            <td> <p><a href="/ticketStatus/delete/{{$result->id}}" class="btn btn-dark btn-large">Delete</a><p></td>
+            <td> <p><a href="/admin/ticketStatus/{{$result->id}}" class="btn btn-dark btn-large">Edit</a><p></td>
+            <td> <p><a href="/admin/ticketStatus/delete/{{$result->id}}" class="btn btn-dark btn-large">Delete</a><p></td>
         </tr>
         @endforeach
     </tbody>
 </table>
-<p><a href="/ticketStatus/create" class="btn btn-dark btn-large">Add New</a><p>
+<p><a href="/admin/ticketStatus/create" class="btn btn-dark btn-large">Add New</a><p>
 
 </div>
 </body>
