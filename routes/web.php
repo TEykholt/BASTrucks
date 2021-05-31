@@ -17,6 +17,14 @@ Route::get('/', [\App\Http\Controllers\TicketController::class, 'loadDashboard']
 Route::get('/admin', 'AdminPannelController@index');
 Route::get('/admin/ticketType', 'TicketTypeController@index');
 Route::get('/admin/ticketStatus', 'TicketStatusController@index');
+Route::get('/admin/department', 'DepartmentController@index');
+
+//department
+Route::get('/admin/department/delete/{id}', 'DepartmentController@Delete');
+Route::get('/admin/department/create', 'DepartmentController@create');
+Route::post('/admin/department/add', 'DepartmentController@Add');
+Route::post('/admin/department/{id}', 'DepartmentController@Update');
+Route::get('/admin/department/{id}', 'DepartmentController@edit');
 
 //ticket status
 Route::get('/admin/ticketStatus/delete/{id}', 'TicketStatusController@Delete');
