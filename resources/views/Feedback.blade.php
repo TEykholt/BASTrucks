@@ -25,7 +25,7 @@
             <input type="radio" name="Feedback" id="No" checked="checked" value="No">No    
         </div>
 
-        <input value="{{$ticket_id}}" Name="ticket_id"></input>
+        <input value="{{$ticket_id}}" Name="ticket_id" hidden></input>
         <button type='submit' name='SubmitFeedback'> Submit </button>
     </div>
         </form>
