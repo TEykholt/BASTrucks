@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\TicketPersonModel;
+use App\TicketLogModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
+
+use Carbon\Carbon;
 
 class TicketPersonController extends Controller
 {
@@ -45,7 +48,6 @@ class TicketPersonController extends Controller
 
     function TicketPersonAssignByUsername(Request $request)
     {
-
         if (!auth()->user()->can("assign employee")) {
             abort(403);
         }
@@ -61,6 +63,9 @@ class TicketPersonController extends Controller
             $ticket_person = TicketPersonModel::select('status')->where('person_id', $User->id)->where('ticket_id', $request->ticket_id)->get();
         
             $request->person_id = $User->id;
+            $request->username = $User->username;
+            $request->ticket_id = $User->ticket_id;
+
             if(count($ticket_person)<= 0)
             {
                 //abort(404);
@@ -72,19 +77,32 @@ class TicketPersonController extends Controller
                 return $this->TicketPersonUpdate($request);
             }
         }
-        else{
+        else
+        {
             abort(403);
         }
     }
 
     function TicketPersonAdd(Request $request)
     {
+        //$ticketlog = new TicketLogModel;
+        //$ticketlog->ticket_id = $request->ticket_id;
+        //$ticketlog->message = "assigned ".$request->username." to ticket";
+        //$ticketlog->created_by = auth()->user()->username;
+        //$ticketlog->save();
+        
         TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
-        ->insert(['status' => "assigned", 'person_id' => $request->person_id, 'ticket_id' => $request->ticket_id]);
+        ->insert(['status' => "assigned", 'person_id' => $request->person_id, 'ticket_id' => $request->ticket_id, 'created_at']);
     }
 
     function TicketPersonUpdate(Request $request)
     {
+        //$ticketlog = new TicketLogModel;
+        //$ticketlog->ticket_id = $request->ticket_id;
+        //$ticketlog->message = "reassigned ".$request->username." to ticket";
+        //$ticketlog->created_by = auth()->user()->username;
+        //$ticketlog->save();
+
         TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
         ->update(['status' => "reassigned"]);
     }
@@ -95,8 +113,22 @@ class TicketPersonController extends Controller
             abort(403);
         }
 
+        $userController = new UserController();
+        $userRequest = new Request();
+        $userRequest->id = $request->person_id;
+        $User = $userController->getUser($userRequest);
+
+        if ($User == null) {
+            abort(403);
+        }
+        //$ticketlog = new TicketLogModel;
+        //$ticketlog->ticket_id = $request->ticket_id;
+        //$ticketlog->message = "removed ".$User->username." from ticket";
+        //$ticketlog->created_by = auth()->user()->username;
+        //$ticketlog->save();
+
         TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
-        ->update(['status' => "unassigned"]);
+        ->update(['status' => "unassigned", 'updated_at' => Carbon::now()]);
     }
 
     function GetTickets(Request $request)
