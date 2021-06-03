@@ -19,10 +19,10 @@
                         @case("Average user feedbackscore")
                         <p class="card-text"><i class="far fa-star"></i>&nbsp{{$allKpiResults["AUFS"]}}<p/>
                         @break
-                        @case("Customer Satisfaction")
+                        @case("Customer satisfaction")
                         <p class="card-text"><i class="far fa-thumbs-up"></i>&nbsp{{$allKpiResults["CS"]}}%<p/>
                         @break
-                        @case("Status verdeling issues")
+                        @case("Opened tickets")
                         <p class="card-text"><i class="fas fa-clipboard-list"></i>&nbsp{{$allKpiResults["SVI"]}}<p/>
                         @break
                     @endswitch
