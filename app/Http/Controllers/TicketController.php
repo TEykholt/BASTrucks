@@ -148,7 +148,10 @@ class TicketController extends Controller
         $types = ticketTypes::get();
         $departments = departmentModel::get();
 
-        return view('dashboard')->with('results' , $AssignedTickets)->with('types', $types)->with('statuses', $status)->with('departments', $departments);
+        $allKpi = $this->getUserKPI();
+        $allKpiResults = $this->getKpi();
+
+        return view('dashboard')->with('results' , $AssignedTickets)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
     }
 
     function getTicketsFromUserDepartment() {
