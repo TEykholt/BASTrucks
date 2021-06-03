@@ -45,13 +45,13 @@
 
                 @can("view own tickets")
                     <li class="nav-item ">
-                        <a class="nav-link" href="{{url('/')}}">My Submitted tickets</a>
+                        <a class="nav-link" href="{{url('/')}}">My submitted tickets</a>
                     </li>
                 @endcan
 
                 @can("view own department tickets")
                     <li class="nav-item ">
-                        <a class="nav-link" href="{{url('/?dashType=myDepartment')}}">My Department tickets</a>
+                        <a class="nav-link" href="{{url('/?dashType=myDepartment')}}">My department tickets</a>
                     </li>
                 @endcan
 
@@ -73,6 +73,11 @@
                     </li>
                 @endcan
 
+                @can("admin panel")
+                    <li class="nav-item ">
+                        <a class="nav-link" href="{{url('/admin')}}">Admin panel</a>
+                    </li>
+                @endcan
             </ul>
 
             @can("ticket input")
