@@ -28,7 +28,7 @@ class UserController extends Controller
         if (count($user) <= 0){
             abort(403);
         }
-        
+
         $kpiData = kpiModel::get();
         foreach($kpiData as $kpi){
             $kpiRequest = "kpi".$kpi['id'];
@@ -90,7 +90,7 @@ class UserController extends Controller
         $FullName = $request->firstname." ".$request->lastname;
         $password = Hash::make($request->password);
         User::where("id", auth()->user()->id)
-            ->update(['username' => $FullName, "email" => $request->email, 'password' => $password]);
+            ->update(['username' => $FullName, "email" => $request->email, 'password' => $password, 'tell' => $request->tell]);
 
 
         $user = User::where("id", auth()->user()->id)
