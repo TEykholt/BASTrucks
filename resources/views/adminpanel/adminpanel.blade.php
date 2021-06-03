@@ -21,7 +21,7 @@
             <div class="card-body">
                 <h5 class="card-title">Departments</h5>
                 <p class="card-text">Edit the type of the departments kpi.</p>
-                <a href="/admin/Departments" class="btn btn-primary">Mange</a>
+                <a href="/admin/departments" class="btn btn-primary">Mange</a>
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@
             <div class="card-body">
                 <h5 class="card-title">Users</h5>
                 <p class="card-text">Edit the type of the departments kpi.</p>
-                <a href="/admin/Users" class="btn btn-primary">Mange</a>
+                <a href="/admin/users" class="btn btn-primary">Mange</a>
             </div>
         </div>
     </div>
