@@ -25,7 +25,7 @@
                 <label for="FeedbackBox" class="Filter-Label">Feedback</label>
                 <textarea name="FeedbackBox" type="text" class=" form-control"cols="40" rows="5" value=""></textarea>
             </div>
-        <input value="{{$ticket_id}}" Name="ticket_id" hidden></input>
+        <input value="{{$ticket_id}}" Name="ticket_id" hidden />
         <button class="btn btn-primary" type='submit' name='SubmitFeedback'> Submit </button>
     </div>
         </form>
