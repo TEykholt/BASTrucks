@@ -4,7 +4,7 @@
         <div class="col-lg-6">
             <p id="id" hidden>{{$result['id']}}</p>
             <h1 class="mt-2">Ticket - {{$result['id']}}</h1>
-            
+
             @can("edit ticket")
                 <select onchange="updateTicket()" id="type" class="form-control mb-4 w-25 mt-3">
                     <option selected value="{{$result['type']}}">{{$result['type']}}</option>
@@ -25,7 +25,10 @@
                 <div class="ml-auto">
                         <p class="text-right">
                             Submitted by {{$result['person_name']}}<br/>
-                            {{$result['email']}}<br/>
+                            <i class="fas fa-envelope"></i> {{$result['email']}}<br/>
+                            @isset($result['tell'])
+                                <i class="fas fa-phone-alt"></i> {{$result['tell']}}<br/>
+                            @endisset
                             @if($result['status'] == 'closed')
                                 <a href="{{ url('/openTicket/'.$result['id']) }}" class="btn btn-primary mt-4">Open Ticket</a>
                             @else
@@ -36,7 +39,7 @@
                 </div>
             </div>
         @endcan
-        
+
     </div>
 <div class="row">
     <div class="col-lg-7">
@@ -57,7 +60,7 @@
                 @endforeach
             @endif
         </div>
-        
+
         @can("edit ticket")
             <form method="post" class="text-right" action="/ticketviewer/editTicketAttachements" enctype="multipart/form-data">
                 @csrf
@@ -67,7 +70,7 @@
             </form>
         @endcan
 
-        
+
         @isset($AssignedPersons)
         @if(count($AssignedPersons)>0)
         <div class="employee employee_background mt-2">
@@ -89,7 +92,7 @@
                 <h4 class="pt-2">Assign an Employees</h4>
 
                 <input class="form-control" name="searchbox" id="input" type="text" placeholder="Enter name" onchange="getSuggestions(event)" onkeyup="getSuggestions(event)">
-                
+
                 <input id="userSearchbox" type="submit" class="btn btn-primary mt-2 btn-view" value="Assign" onclick="addTicketPerson()">
             </div>
         @endcan
@@ -118,7 +121,7 @@
     var ticketPersonSearchText = ""
     function updateTicket() {
         var data = {
-            type: $('#type').val(), 
+            type: $('#type').val(),
             id : $('#id').html()
         }
 
@@ -133,7 +136,7 @@
         })
     }
 
-    function addTicketPerson() 
+    function addTicketPerson()
     {
         var data = {
             username : ticketPersonSearchText,

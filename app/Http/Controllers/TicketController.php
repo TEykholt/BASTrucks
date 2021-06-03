@@ -177,7 +177,7 @@ class TicketController extends Controller
     function GetSingle($Ticket_id, $TicketOnly) {
         $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
-            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'email', 'department.name as department_name')
+            ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'email', 'department.name as department_name', 'tell')
             ->where('support_ticket.id', $Ticket_id)
             ->get();
         $attachment = null; $logs = null;
