@@ -26,7 +26,7 @@
                      <div class="Filter-Item">
                          <!--Filter-->
                          <label for="department_name" class="Filter-Label">
-                             department:
+                             Department:
                          </label>
                          <select name="department_name" class="Filter-Value" onchange="filterChanged(this, this.value)">
                              <option selected value="None">None</option>
@@ -71,12 +71,12 @@
 <table id="tickets-table" class="table">
     <tr name="head" class="thead">
         <th>Id</th>
-        <th>ticket holder</th>
-        <th>type</th>
-        <th>subject</th>
-        <th>message</th>
-        <th>department</th>
-        <th>status</th>
+        <th>Ticket holder</th>
+        <th>Type</th>
+        <th>Subject</th>
+        <th>Message</th>
+        <th>Department</th>
+        <th>Status</th>
         <th>Worker</th>
     </tr>
 
