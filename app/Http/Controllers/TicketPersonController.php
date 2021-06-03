@@ -23,7 +23,7 @@ class TicketPersonController extends Controller
         $ticketperson = new TicketPersonModel;
         $ticketperson->person_id = $request->person_id;
         $ticketperson->ticket_id = $request->ticket_id;
-        $ticketperson->status = "assigned";
+        $ticketperson->status = "open";
         $ticketperson->save();
     }
 
@@ -68,12 +68,10 @@ class TicketPersonController extends Controller
 
             if(count($ticket_person)<= 0)
             {
-                //abort(404);
                 return $this->TicketPersonAdd($request);
             }
             else if($ticket_person[0]->status =="unassigned")
             {
-                //abort(405);
                 return $this->TicketPersonUpdate($request);
             }
         }
@@ -138,7 +136,7 @@ class TicketPersonController extends Controller
 
     function GetTicketPersonsByTicket(Request $request)
     {
-        $ticket_persons=TicketPersonModel::where('ticket_id', $request->ticket_id)->where('status', "assigned")->orwhere('status', "reassigned")->get();
+        $ticket_persons=TicketPersonModel::where('ticket_id', $request->ticket_id)->where('status', "assigned")->get();
         $userController = new UserController();
         $userRequest = new Request();
         $returnPersons=array();
