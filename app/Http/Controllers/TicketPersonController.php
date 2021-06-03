@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\TicketPersonModel;
+use App\TicketLogModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 
@@ -65,6 +66,9 @@ class TicketPersonController extends Controller
             $ticket_person = TicketPersonModel::select('status')->where('person_id', $User->id)->where('ticket_id', $request->ticket_id)->get();
         
             $request->person_id = $User->id;
+            //$request->username = $User->username;
+            //$request->ticket_id = $User->ticket_id;
+
             if(count($ticket_person)<= 0)
             {
                 //abort(404);
@@ -83,12 +87,29 @@ class TicketPersonController extends Controller
 
     function TicketPersonAdd(Request $request)
     {
-        TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
-        ->insert(['status' => "assigned", 'person_id' => $request->person_id, 'ticket_id' => $request->ticket_id]);
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $request->ticket_id;
+        $ticketlog->message = "assigned ".$request->username." to ticket";
+        $ticketlog->created_by = auth()->user()->username;
+        $ticketlog->save();
+
+        $ticket_person = new TicketPersonModel();
+        $ticket_person->status = "assigned";
+        $ticket_person->person_id = $request->person_id;
+        $ticket_person->ticket_id = $request->ticket_id;
+        $ticket_person->save();
+        
+        //TicketPersonModel::insert(['status' => "assigned", 'person_id' => $request->person_id, 'ticket_id' => $request->ticket_id]);
     }
 
     function TicketPersonUpdate(Request $request)
     {
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $request->ticket_id;
+        $ticketlog->message = "reassigned ".$request->username." to ticket";
+        $ticketlog->created_by = auth()->user()->username;
+        $ticketlog->save();
+
         TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
         ->update(['status' => "reassigned"]);
     }
@@ -98,6 +119,20 @@ class TicketPersonController extends Controller
         if (!auth()->user()->can("unassign employee")) {
             abort(403);
         }
+
+        $userController = new UserController();
+        $userRequest = new request();
+        $userRequest->id = $request->person_id;
+
+        $User = $userController->getUser($userRequest);
+
+        if(!$User){abort(403);}
+
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $request->ticket_id;
+        $ticketlog->message = "removed ".$User->username." from ticket";
+        $ticketlog->created_by = auth()->user()->username;
+        $ticketlog->save();
 
         TicketPersonModel::where('person_id', $request->person_id)->where('ticket_id', $request->ticket_id)
         ->update(['status' => "unassigned"]);
