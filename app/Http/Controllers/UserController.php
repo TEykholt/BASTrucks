@@ -106,6 +106,6 @@ class UserController extends Controller
     //Admin functions
     function getAllUsers(){
         $users = User::all();
-        return view("ticketstatus/ticketStatus")->with('users', $users);
+        return view("users/users")->with('users', $users);
     }
 }

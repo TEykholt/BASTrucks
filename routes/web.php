@@ -18,7 +18,7 @@ Route::get('/admin', 'AdminPannelController@index');
 Route::get('/admin/ticketTypes', 'TicketTypeController@index');
 Route::get('/admin/ticketStatus', 'TicketStatusController@index');
 Route::get('/admin/departments', 'DepartmentController@index');
-Route::get('/admin/users', 'DepartmentController@index');
+Route::get('/admin/users', 'UserController@getAllUsers');
 
 //users
 Route::get('/admin/users/delete/{id}', 'UserController@Delete');
