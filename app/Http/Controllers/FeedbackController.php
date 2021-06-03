@@ -18,7 +18,7 @@ class FeedbackController extends Controller
         $Feedback->FeedbackBox = $request->FeedbackBox;
         $Feedback->score = $request->Score;
         $Feedback->save();
-        return redirect('http://127.0.0.1:8000/');
+        return redirect('https://i460123.hera.fhict.nl/');
     }
     public function load_ticket_feedback($id)
     {

@@ -305,8 +305,8 @@ class TicketController extends Controller
         $ticketlog->created_by = auth()->user()->name;
         $ticketlog->save();
 
-        $mailcontroller = new MailController();
-        $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/".$ticket->id,  $ticket->email);
+        //$mailcontroller = new MailController();
+        //$mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/".$ticket->id,  $ticket->email);
 
         return $this->loadDashboard(new Request());
     }
@@ -409,7 +409,7 @@ class TicketController extends Controller
 
             foreach($allKpi as $kpi){
                 switch($kpi){
-                    case "Avarage ResponseTime":
+                    case "Average response time":
                         $avr = TicketModel::join("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
                             ->selectRaw("AVG(ROUND(time_to_sec((TIMEDIFF(support_ticket.created_at, ticket_person.created_at))) / 3600)) AS difference")
                             ->get();
@@ -421,13 +421,13 @@ class TicketController extends Controller
                             ->get();
                         $allKpiResults["TSF"] =  number_format(round($tsf[0]["count"], 2), 2);
                         break;
-                    case "Avarage total resolution time":
+                    case "Average total resolution time":
                         $avrt = TicketModel::selectRaw("AVG(ROUND(time_to_sec((TIMEDIFF(closed_at, created_at))) / 3600)) AS difference")
                             ->get();
 
                         $allKpiResults["AVTR"] =  number_format(round($avrt[0]["difference"], 2), 2);
                         break;
-                    case "Avarage user feedbackscore":
+                    case "Average user feedbackscore":
                         $avuf = FeedbackModel::selectRaw("avg(score) as avg_score")
                             ->get();
                         $allKpiResults["AUFS"] =  round($avuf[0]['avg_score'], 2);

@@ -7,16 +7,16 @@
                 </div>
                 <div class="card-body">
                     @switch($kpi)
-                        @case("Avarage ResponseTime")
+                        @case("Average response time")
                         <p class="card-text"><i class="fas fa-stopwatch"></i>&nbsp{{$allKpiResults["AVR"]}} min<p/>
                         @break
-                        @case("Avarage total resolution time")
+                        @case("Average total resolution time")
                         <p class="card-text"><i class="far fa-clock"></i>&nbsp{{$allKpiResults["AVTR"]}} min<p/>
                         @break
                         @case("Time service factor")
                         <p class="card-text"><i class="fas fa-hourglass-half"></i>&nbsp{{$allKpiResults["TSF"]}}  min<p/>
                         @break
-                        @case("Avarage user feedbackscore")
+                        @case("Average user feedbackscore")
                         <p class="card-text"><i class="far fa-star"></i>&nbsp{{$allKpiResults["AUFS"]}}<p/>
                         @break
                         @case("Customer Satisfaction")

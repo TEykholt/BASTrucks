@@ -210,5 +210,6 @@ ul.ui-autocomplete {
     list-style: none;
 }
 .ui-helper-hidden-accessible{
+
     display: none;
 }
