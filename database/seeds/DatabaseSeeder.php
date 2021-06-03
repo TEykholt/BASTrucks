@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'edit ticket'],
 
             ['name' => 'assign employee'],
+            ['name' => 'can be assigned'],
             ['name' => 'unassign employee'],
             ['name' => 'edit employee'],
 

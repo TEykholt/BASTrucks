@@ -28,7 +28,7 @@ class UserController extends Controller
         if (count($user) <= 0){
             abort(403);
         }
-        
+
         $kpiData = kpiModel::get();
         foreach($kpiData as $kpi){
             $kpiRequest = "kpi".$kpi['id'];
@@ -77,7 +77,12 @@ class UserController extends Controller
 
     function getAutoCompleteUsers(Request $request){
         if($request->has('username')){
-            return User::select("username")->where('username','like','%'.$request->input('username').'%')->get();
+            return User::select("username")
+            ->join("model_has_roles","model_has_roles.model_id","=","id")
+            ->join("role_has_permissions","role_has_permissions.role_id","=","model_has_roles.role_id")
+            ->join("permissions","permissions.id","=","role_has_permissions.permission_id")
+            ->where('permissions.name', '=', 'can be assigned')
+            ->where('username','like','%'.$request->input('username').'%')->get();
         }
     }
 
@@ -85,7 +90,7 @@ class UserController extends Controller
         $FullName = $request->firstname." ".$request->lastname;
         $password = Hash::make($request->password);
         User::where("id", auth()->user()->id)
-            ->update(['username' => $FullName, "email" => $request->email, 'password' => $password]);
+            ->update(['username' => $FullName, "email" => $request->email, 'password' => $password, 'tell' => $request->tell]);
 
 
         $user = User::where("id", auth()->user()->id)

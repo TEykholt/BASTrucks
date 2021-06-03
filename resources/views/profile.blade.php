@@ -54,6 +54,10 @@
                     <input required type="text" class="form-control" id="lastname" name="lastname" placeholder="{{$userData[0]['name']}}">
                 </div>
                 <div class="form-group">
+                    <label for="tell">Telephone  number</label>
+                    <input required type="text" class="form-control" id="tell" name="tell" placeholder="{{$userData[0]['tell']}}">
+                </div>
+                <div class="form-group">
                     <label for="exampleInputPassword1">New password</label>
                     <input required type="password" class="form-control" id="exampleInputPassword1" name="password" >
                 </div>

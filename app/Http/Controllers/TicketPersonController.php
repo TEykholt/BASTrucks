@@ -58,6 +58,10 @@ class TicketPersonController extends Controller
         $User = $userController->getUserByUserName($request);
         
         if ($User) {
+            if (!$User->can("can be assigned")) {
+                abort(403);
+            }
+            
             $ticket_person = TicketPersonModel::select('status')->where('person_id', $User->id)->where('ticket_id', $request->ticket_id)->get();
         
             $request->person_id = $User->id;
