@@ -97,4 +97,10 @@ class UserController extends Controller
         $kpiData = kpiModel::get();
         return view('profile')->with('userData', $user)->with('kpiData', $kpiData)->with('personSetting', $person_settings);
     }
+
+    //Admin functions
+    function getAllUsers(){
+        $users = User::all();
+        return view("ticketstatus/ticketStatus")->with('users', $users);
+    }
 }
