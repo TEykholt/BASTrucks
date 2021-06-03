@@ -432,12 +432,12 @@ class TicketController extends Controller
                             ->get();
                         $allKpiResults["AUFS"] =  round($avuf[0]['avg_score'], 2);
                         break;
-                    case "Customer Satisfaction":
+                    case "Customer satisfaction":
                         $cs = FeedbackModel::selectRaw("(SELECT count(*) FROM ticket_feedback where FeedbackBox is null) / count(*) * 100  as percentage")
                             ->get();
                         $allKpiResults["CS"] = round($cs[0]['percentage'], 2);
                         break;
-                    case "Status verdeling issues":
+                    case "Opened tickets":
                         $SVI = TicketModel::selectRaw("count(*) as count")
                             ->whereRaw("closed_at is null")
                             ->get();
