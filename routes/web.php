@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [\App\Http\Controllers\TicketController::class, 'loadDashboard']);
 
+//adminpanel
 Route::get('/admin', 'AdminPannelController@index');
 Route::get('/admin/ticketTypes', 'TicketTypeController@index');
 Route::get('/admin/ticketStatus', 'TicketStatusController@index');
