@@ -14,6 +14,8 @@ use App\statusModel;
 use App\TicketPersonModel;
 use App\Http\Controllers\TicketPersonController;
 
+include("../vendor/php-imap\php-imap\src\PhpImap\Mailbox.php");
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -82,8 +84,9 @@ class TicketController extends Controller
         if (!auth()->user()->can("view all tickets")) {
             abort(403);
         }
+        $this->getMailFromMailbox();
 
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
+        $data = TicketModel::leftJoin("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'department.name as department_name')
             ->where('closed_at',  null)
@@ -96,6 +99,86 @@ class TicketController extends Controller
         $types = ticketTypes::get();
         $departments = departmentModel::get();
         return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
+    }
+
+    private function getMailFromMailbox(){
+// Connect to server imap.gmail.com via SSL on port 993 and open the 'INBOX' folder
+// Authenticate with the username / email address 'some@gmail.com'
+// Save attachments to the directory '__DIR__'
+// Set server encoding to 'US-ASCII'
+        $mailbox = new \PhpImap\Mailbox(
+            '{imap.gmail.com:993/imap/ssl}INBOX', // IMAP server and mailbox folder
+            'bastrucksmail@gmail.com', // Username for the before configured mailbox
+            'B4STr5cks12#', // Password for the before configured username
+        );
+
+        try {
+            // Search in mailbox folder for specific emails
+            // PHP.net imap_search criteria: http://php.net/manual/en/function.imap-search.php
+            // Here, we search for "all" emails
+            $mails_ids = $mailbox->searchMailbox('UNSEEN');
+        } catch(\PhpImap\Exceptions\ConnectionException $ex) {
+            echo "IMAP connection failed: " . $ex;
+            die();
+        }
+
+// Change default path delimiter '.' to '/'
+        $mailbox->setPathDelimiter('/');
+
+// Switch server encoding
+        $mailbox->setServerEncoding('UTF-8');
+
+// Change attachments directory
+// Useful, when you did not set it at the beginning or
+// when you need a different folder for eg. each email sender
+//$mailbox->setAttachmentsDir('/var/www/example.com/ticket-system/imap/attachments');
+
+// Disable processing of attachments, if you do not require the attachments
+// This significantly improves the performance
+        $mailbox->setAttachmentsIgnore(true);
+
+// Loop through all emails
+        foreach($mails_ids as $mail_id) {
+            // Get mail by $mail_id
+            $email = $mailbox->getMail(
+                $mail_id, // ID of the email, you want to get
+                true // Do NOT mark emails as seen
+            );
+            if($email->textHtml) {
+                $ticket = new TicketModel;
+                $ticket->person_id = 0;
+                $ticket->department_id = 0;
+                $ticket->type = "Jaspersoft";
+                $ticket->subject = $email->subject;
+                $ticket->message = $email->textHtml;
+                $ticket->status = "open";
+                $ticket->save();
+            } else {
+                $ticket = new TicketModel;
+                $ticket->person_id = 0;
+                $ticket->department_id = 0;
+                $ticket->type = "Jaspersoft";
+                $ticket->subject = $email->subject;
+                $ticket->message = $email->textPlain;
+                $ticket->status = "open";
+                $ticket->save();
+            }
+
+
+
+            if(!empty($email->autoSubmitted)) {
+                // Mark email as "read" / "seen"
+                $mailbox->markMailAsRead($mail_id);
+            }
+
+            if(!empty($email->precedence)) {
+                // Mark email as "read" / "seen"
+                $mailbox->markMailAsRead($mail_id);
+            }
+        }
+
+// Disconnect from mailbox
+        $mailbox->disconnect();
     }
 
     function getTicketsFromUser() {
@@ -178,7 +261,7 @@ class TicketController extends Controller
     }
 
     function GetSingle($Ticket_id, $TicketOnly) {
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
+        $data = TicketModel::leftJoin("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'email', 'department.name as department_name', 'tell')
             ->where('support_ticket.id', $Ticket_id)
