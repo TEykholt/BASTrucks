@@ -14,7 +14,7 @@ use App\statusModel;
 use App\TicketPersonModel;
 use App\Http\Controllers\TicketPersonController;
 
-include("../vendor/php-imap\php-imap\src\PhpImap\Mailbox.php");
+include("../vendor/php-imap/php-imap/src/PhpImap/Mailbox.php");
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -106,20 +106,26 @@ class TicketController extends Controller
 // Authenticate with the username / email address 'some@gmail.com'
 // Save attachments to the directory '__DIR__'
 // Set server encoding to 'US-ASCII'
+
         $mailbox = new \PhpImap\Mailbox(
             '{imap.gmail.com:993/imap/ssl}INBOX', // IMAP server and mailbox folder
             'bastrucksmail@gmail.com', // Username for the before configured mailbox
             'B4STr5cks12#', // Password for the before configured username
         );
 
+
         try {
+
             // Search in mailbox folder for specific emails
             // PHP.net imap_search criteria: http://php.net/manual/en/function.imap-search.php
             // Here, we search for "all" emails
             $mails_ids = $mailbox->searchMailbox('UNSEEN');
+
         } catch(\PhpImap\Exceptions\ConnectionException $ex) {
+
             echo "IMAP connection failed: " . $ex;
             die();
+            
         }
 
 // Change default path delimiter '.' to '/'
@@ -137,7 +143,7 @@ class TicketController extends Controller
 // This significantly improves the performance
         $mailbox->setAttachmentsIgnore(true);
 
-// Loop through all emails
+
         foreach($mails_ids as $mail_id) {
             // Get mail by $mail_id
             $email = $mailbox->getMail(
@@ -368,12 +374,12 @@ class TicketController extends Controller
 
         $ticketlog = new TicketLogModel;
         $ticketlog->ticket_id = $ticket->id;
-        $ticketlog->message = "ticket was created by " . auth()->user()->name;
-        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->message = "ticket was created by " . auth()->user()->username;
+        $ticketlog->created_by = auth()->user()->username;
         $ticketlog->save();
 
         $mailcontroller = new MailController();
-        $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
+        $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->username, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
 
         return $this->loadDashboard(new Request());
     }
@@ -385,8 +391,8 @@ class TicketController extends Controller
         $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->select("username", "support_ticket.id", "person.email")->where('support_ticket.id', $id)->first();
         $ticketlog = new TicketLogModel;
         $ticketlog->ticket_id = $id;
-        $ticketlog->message = "ticket was closed by " . auth()->user()->name;
-        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->message = "ticket was closed by " . auth()->user()->username;
+        $ticketlog->created_by = auth()->user()->username;
         $ticketlog->save();
 
         $mailcontroller = new MailController();
@@ -403,8 +409,8 @@ class TicketController extends Controller
 
         $ticketlog = new TicketLogModel;
         $ticketlog->ticket_id = $id;
-        $ticketlog->message = "ticket was reopend by " . auth()->user()->name;
-        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->message = "ticket was reopend by " . auth()->user()->username;
+        $ticketlog->created_by = auth()->user()->username;
         $ticketlog->save();
 
         return $this->loadDashboard(new Request());
@@ -427,6 +433,12 @@ class TicketController extends Controller
 
         $id=$request->id;
         $type=$request->type;
+
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $id;
+        $ticketlog->message = auth()->user()->username." has updated the ticket";
+        $ticketlog->created_by = auth()->user()->username;
+        $ticketlog->save();
 
         TicketModel::where('id', $id)
             ->update(['type' => $type, "updated_at" => Carbon::now()]);
@@ -468,6 +480,12 @@ class TicketController extends Controller
         $id=$request->id;
         $message=$request->message;
 
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $id;
+        $ticketlog->message = auth()->user()->username." has updated the ticket message";
+        $ticketlog->created_by = auth()->user()->username;
+        $ticketlog->save();
+        
         TicketModel::where('id', $id)
             ->update(['message' => $message, "updated_at" => Carbon::now()]);
     }
