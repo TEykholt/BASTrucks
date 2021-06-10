@@ -185,13 +185,14 @@ class TicketController extends Controller
         if (!auth()->user()->can("view own tickets")) {
             abort(403);
         }
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
+        $data = TicketModel::leftJoin("person","person.id","=","support_ticket.person_id")
             ->join("department","department.id","=","support_ticket.department_id")
             ->leftJoin("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
-            ->selectRaw('support_ticket.id, support_ticket.status, subject, type, message, person.username as person_name, department.name as department_name, ticket_person.person_id, (SELECT username FROM person WHERE person.id = ticket_person.person_id) as ticketWorker')
+            ->selectRaw('DISTINCT support_ticket.id, support_ticket.status, subject, type, message, person.username as person_name, department.name as department_name, ticket_person.person_id, (SELECT username FROM person WHERE person.id = ticket_person.person_id) as ticketWorker')
             ->where('support_ticket.person_id', auth()->user()->id)
             ->where('closed_at',  null)
-            ->get();
+            ->get()
+            ->unique("support_ticket.id");
 
         $workerData = TicketModel::join("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
             ->join("person","person.id","=","ticket_person.person_id")
@@ -371,8 +372,8 @@ class TicketController extends Controller
         $ticketlog->created_by = auth()->user()->name;
         $ticketlog->save();
 
-        //$mailcontroller = new MailController();
-        //$mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
+        $mailcontroller = new MailController();
+        $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
 
         return $this->loadDashboard(new Request());
     }
@@ -388,8 +389,8 @@ class TicketController extends Controller
         $ticketlog->created_by = auth()->user()->name;
         $ticketlog->save();
 
-        //$mailcontroller = new MailController();
-        //$mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/".$ticket->id,  $ticket->email);
+        $mailcontroller = new MailController();
+        $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/".$ticket->id,  $ticket->email);
 
         return $this->loadDashboard(new Request());
     }
