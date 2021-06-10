@@ -225,7 +225,7 @@ $(document).ready(function() {
 
 
 var oldVal = "";
-$("#message").on("change keyup paste", function() {
+$("#message").focusout(function() {
  var currentVal = $(this).val();
  if(currentVal == oldVal) {
      return; //check to prevent multiple simultaneous triggers

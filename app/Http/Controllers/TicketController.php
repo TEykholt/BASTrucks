@@ -14,7 +14,7 @@ use App\statusModel;
 use App\TicketPersonModel;
 use App\Http\Controllers\TicketPersonController;
 
-include("../vendor/php-imap\php-imap\src\PhpImap\Mailbox.php");
+include("../vendor/php-imap/php-imap/src/PhpImap/Mailbox.php");
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,7 +26,8 @@ class TicketController extends Controller
         $this->middleware('auth');
     }
 
-    function loadDashboard(Request $repuest) {
+    function loadDashboard(Request $repuest)
+    {
         //ToDo: implement permissions
 
         $DefaultRoles = [
@@ -62,17 +63,19 @@ class TicketController extends Controller
         }
     }
 
-    function loadArchive(){
+    function loadArchive()
+    {
         if (!auth()->user()->can("view archived tickets")) {
             abort(403);
         }
         return view('archive');
     }
-    function checkArchive(Request $request){
-        $id=$request->input;
+    function checkArchive(Request $request)
+    {
+        $id = $request->input;
 
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
-            ->join("department","department.id","=","support_ticket.department_id")
+        $data = TicketModel::join("person", "person.id", "=", "support_ticket.person_id")
+            ->join("department", "department.id", "=", "support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'department.name as department_name')
             ->where('support_ticket.id', $id)
             ->get();
@@ -80,14 +83,15 @@ class TicketController extends Controller
         return view('archiveReturn')->with('data', $data);
     }
 
-    function getAllTickets(){
+    function getAllTickets()
+    {
         if (!auth()->user()->can("view all tickets")) {
             abort(403);
         }
-        $this->getMailFromMailbox();
+        $this->getImapMailbox();
 
-        $data = TicketModel::leftJoin("person","person.id","=","support_ticket.person_id")
-            ->join("department","department.id","=","support_ticket.department_id")
+        $data = TicketModel::leftJoin("person", "person.id", "=", "support_ticket.person_id")
+            ->join("department", "department.id", "=", "support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'department.name as department_name')
             ->where('closed_at',  null)
             ->get();
@@ -98,104 +102,58 @@ class TicketController extends Controller
         $status = statusModel::get();
         $types = ticketTypes::get();
         $departments = departmentModel::get();
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
+        return view('dashboard')->with('results', $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
     }
 
-    private function getMailFromMailbox(){
-// Connect to server imap.gmail.com via SSL on port 993 and open the 'INBOX' folder
-// Authenticate with the username / email address 'some@gmail.com'
-// Save attachments to the directory '__DIR__'
-// Set server encoding to 'US-ASCII'
-        $mailbox = new \PhpImap\Mailbox(
-            '{imap.gmail.com:993/imap/ssl}INBOX', // IMAP server and mailbox folder
-            'bastrucksmail@gmail.com', // Username for the before configured mailbox
-            'B4STr5cks12#', // Password for the before configured username
-        );
-
+    private function getImapMailbox()
+    {
         try {
-            // Search in mailbox folder for specific emails
-            // PHP.net imap_search criteria: http://php.net/manual/en/function.imap-search.php
-            // Here, we search for "all" emails
-            $mails_ids = $mailbox->searchMailbox('UNSEEN');
-        } catch(\PhpImap\Exceptions\ConnectionException $ex) {
-            echo "IMAP connection failed: " . $ex;
-            die();
+           
+            $inbox = imap_open('{imap.gmail.com:993/imap/ssl}INBOX', 'bastrucksmail@gmail.com', 'B4STr5cks12#');
+
+            $EmailNumbers = imap_search($inbox, 'UNSEEN');
+
+            if ($EmailNumbers) {
+                rsort($EmailNumbers);
+
+                foreach ($EmailNumbers as $email_number) {
+                    $overview = imap_fetch_overview($inbox, $email_number, 0)[0];
+                    $message = imap_fetchbody($inbox, $email_number, 1.2);
+
+                    $ticket = new TicketModel;
+                    $ticket->person_id = 0;
+                    $ticket->department_id = 0;
+                    $ticket->type = "Jaspersoft";
+                    $ticket->subject = $overview->subject;
+                    $ticket->message = $message;
+                    $ticket->status = "open";
+                    $ticket->save();
+                }
+            }
+
+            imap_close($inbox);
+
+        } catch (\Throwable $th) {
+            
         }
-
-// Change default path delimiter '.' to '/'
-        $mailbox->setPathDelimiter('/');
-
-// Switch server encoding
-        $mailbox->setServerEncoding('UTF-8');
-
-// Change attachments directory
-// Useful, when you did not set it at the beginning or
-// when you need a different folder for eg. each email sender
-//$mailbox->setAttachmentsDir('/var/www/example.com/ticket-system/imap/attachments');
-
-// Disable processing of attachments, if you do not require the attachments
-// This significantly improves the performance
-        $mailbox->setAttachmentsIgnore(true);
-
-// Loop through all emails
-        foreach($mails_ids as $mail_id) {
-            // Get mail by $mail_id
-            $email = $mailbox->getMail(
-                $mail_id, // ID of the email, you want to get
-                true // Do NOT mark emails as seen
-            );
-            if($email->textHtml) {
-                $ticket = new TicketModel;
-                $ticket->person_id = 0;
-                $ticket->department_id = 0;
-                $ticket->type = "Jaspersoft";
-                $ticket->subject = $email->subject;
-                $ticket->message = $email->textHtml;
-                $ticket->status = "open";
-                $ticket->save();
-            } else {
-                $ticket = new TicketModel;
-                $ticket->person_id = 0;
-                $ticket->department_id = 0;
-                $ticket->type = "Jaspersoft";
-                $ticket->subject = $email->subject;
-                $ticket->message = $email->textPlain;
-                $ticket->status = "open";
-                $ticket->save();
-            }
-
-
-
-            if(!empty($email->autoSubmitted)) {
-                // Mark email as "read" / "seen"
-                $mailbox->markMailAsRead($mail_id);
-            }
-
-            if(!empty($email->precedence)) {
-                // Mark email as "read" / "seen"
-                $mailbox->markMailAsRead($mail_id);
-            }
-        }
-
-// Disconnect from mailbox
-        $mailbox->disconnect();
     }
 
-    function getTicketsFromUser() {
+    function getTicketsFromUser()
+    {
         if (!auth()->user()->can("view own tickets")) {
             abort(403);
         }
-        $data = TicketModel::leftJoin("person","person.id","=","support_ticket.person_id")
-            ->join("department","department.id","=","support_ticket.department_id")
-            ->leftJoin("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
+        $data = TicketModel::leftJoin("person", "person.id", "=", "support_ticket.person_id")
+            ->join("department", "department.id", "=", "support_ticket.department_id")
+            ->leftJoin("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
             ->selectRaw('DISTINCT support_ticket.id, support_ticket.status, subject, type, message, person.username as person_name, department.name as department_name, ticket_person.person_id, (SELECT username FROM person WHERE person.id = ticket_person.person_id) as ticketWorker')
             ->where('support_ticket.person_id', auth()->user()->id)
             ->where('closed_at',  null)
             ->get()
             ->unique("support_ticket.id");
 
-        $workerData = TicketModel::join("ticket_person","ticket_person.ticket_id","=","support_ticket.id")
-            ->join("person","person.id","=","ticket_person.person_id")
+        $workerData = TicketModel::join("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
+            ->join("person", "person.id", "=", "ticket_person.person_id")
             ->select('username')
             ->get();
         $status = statusModel::get();
@@ -205,10 +163,11 @@ class TicketController extends Controller
         $allKpi = $this->getUserKPI();
         $allKpiResults = $this->getKpi();
 
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
+        return view('dashboard')->with('results', $data)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
     }
 
-    function getAssignedTicketsFromUser() {
+    function getAssignedTicketsFromUser()
+    {
         if (!auth()->user()->can("view assigned tickets")) {
             abort(403);
         }
@@ -219,13 +178,12 @@ class TicketController extends Controller
 
 
         $AssignedTickets = array();
-        for ($i=0; $i < count($Ticket_Persons); $i++) {
+        for ($i = 0; $i < count($Ticket_Persons); $i++) {
             $Ticket_Person = $Ticket_Persons[$i];
 
             if (strtolower($Ticket_Person->status) != "unassigned") {
                 array_push($AssignedTickets, $this->GetSingle($Ticket_Person->ticket_id, true)->ticket);
             }
-
         }
 
         $status = statusModel::get();
@@ -235,16 +193,17 @@ class TicketController extends Controller
         $allKpi = $this->getUserKPI();
         $allKpiResults = $this->getKpi();
 
-        return view('dashboard')->with('results' , $AssignedTickets)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
+        return view('dashboard')->with('results', $AssignedTickets)->with('types', $types)->with('statuses', $status)->with('departments', $departments)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
     }
 
-    function getTicketsFromUserDepartment() {
+    function getTicketsFromUserDepartment()
+    {
         if (!auth()->user()->can("view own department tickets")) {
             abort(403);
         }
 
-        $data = TicketModel::join("person","person.id","=","support_ticket.person_id")
-            ->join("department","department.id","=","support_ticket.department_id")
+        $data = TicketModel::join("person", "person.id", "=", "support_ticket.person_id")
+            ->join("department", "department.id", "=", "support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'email', 'department.name as department_name')
             ->where('department.id', auth()->user()->department_id)
             ->where('closed_at',  null)
@@ -258,22 +217,24 @@ class TicketController extends Controller
         $allKpiResults = $this->getKpi();
 
 
-        return view('dashboard')->with('results' , $data)->with('types', $types)->with('statuses', $status)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
+        return view('dashboard')->with('results', $data)->with('types', $types)->with('statuses', $status)->with("allKpis", $allKpi)->with("allKpiResults", $allKpiResults);
     }
 
-    function GetSingle($Ticket_id, $TicketOnly) {
-        $data = TicketModel::leftJoin("person","person.id","=","support_ticket.person_id")
-            ->join("department","department.id","=","support_ticket.department_id")
+    function GetSingle($Ticket_id, $TicketOnly)
+    {
+        $data = TicketModel::leftJoin("person", "person.id", "=", "support_ticket.person_id")
+            ->join("department", "department.id", "=", "support_ticket.department_id")
             ->select('support_ticket.id', 'status', 'subject', 'type', 'message', 'person.username as person_name', 'email', 'department.name as department_name', 'tell')
             ->where('support_ticket.id', $Ticket_id)
             ->get();
-        $attachment = null; $logs = null;
+        $attachment = null;
+        $logs = null;
 
         if (!$TicketOnly) {
             $attachment = attachmentModel::where('ticket_id', $Ticket_id)
                 ->get();
 
-            $logs = TicketLogModel::select("message","created_at","created_by")
+            $logs = TicketLogModel::select("message", "created_at", "created_by")
                 ->where('ticket_id', $Ticket_id)
                 ->get();
         }
@@ -284,35 +245,36 @@ class TicketController extends Controller
                 'attachments' => $attachment,
                 'logs' => $logs
             ];
-        }
-        else {
+        } else {
             return null;
         }
-   }
+    }
 
-   function getTicketViewerWithoutRequest($id){
+    function getTicketViewerWithoutRequest($id)
+    {
         if (!auth()->user()->can("view ticketviewer")) {
             abort(403);
         }
 
-       $TicketInformation = $this->GetSingle($id, false);
+        $TicketInformation = $this->GetSingle($id, false);
 
-       if ($TicketInformation) {
-           $status = statusModel::get();
+        if ($TicketInformation) {
+            $status = statusModel::get();
 
-           $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
-           return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
-       }
-       else {
-           $this->loadDashboard(new Request());
-       }
-   }
+            $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
+            return view("ticketviewer")->with('result', $TicketInformation->ticket)->with('logs', $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
+        } else {
+            $this->loadDashboard(new Request());
+        }
+    }
 
-    function getTicketViewerArchive(Request $request) {
+    function getTicketViewerArchive(Request $request)
+    {
         return url('/ticketviewer', $request->id);
     }
 
-   function getTicketViewer(Request $request) {
+    function getTicketViewer(Request $request)
+    {
         //ToDo: Check if user has permissions to view this ticket
         if (!auth()->user()->can("view ticketviewer")) {
             abort(403);
@@ -329,15 +291,15 @@ class TicketController extends Controller
             $ticketPersonController = new TicketPersonController();
             $ticketPersonRequest = new Request();
             $ticketPersonRequest->ticket_id = $request->id;
-            $assignedPersons=$ticketPersonController->GetTicketPersonsByTicket($ticketPersonRequest);
-            return view("ticketviewer")->with("AssignedPersons", $assignedPersons)->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
-        }
-        else {
+            $assignedPersons = $ticketPersonController->GetTicketPersonsByTicket($ticketPersonRequest);
+            return view("ticketviewer")->with("AssignedPersons", $assignedPersons)->with('result', $TicketInformation->ticket)->with('logs', $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
+        } else {
             $this->loadDashboard(new Request());
         }
     }
 
-    function addTicket(Request $request){
+    function addTicket(Request $request)
+    {
         if (!auth()->user()->can("ticket input")) {
             abort(403);
         }
@@ -354,63 +316,66 @@ class TicketController extends Controller
         $ticket->status = "open";
         $ticket->save();
 
-        if($files != null){
-            foreach($files as $file){
+        if ($files != null) {
+            foreach ($files as $file) {
                 $attachment = new attachmentModel;
                 $attachment->name = $file->getClientOriginalName();
                 $attachment->ticket_id = $ticket->id;
                 $attachment->save();
 
                 $destinationPath = 'uploaded_files';
-                $file->move($destinationPath,$file->getClientOriginalName());
+                $file->move($destinationPath, $file->getClientOriginalName());
             }
         }
 
         $ticketlog = new TicketLogModel;
         $ticketlog->ticket_id = $ticket->id;
-        $ticketlog->message = "ticket was created by " . auth()->user()->name;
-        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->message = "ticket was created by " . auth()->user()->username;
+        $ticketlog->created_by = auth()->user()->username;
         $ticketlog->save();
 
         $mailcontroller = new MailController();
-        $mailcontroller->SendEmail($request->subject, "Dear, ". auth()->user()->name, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
+        $mailcontroller->SendEmail($request->subject, "Dear, " . auth()->user()->username, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
 
         return $this->loadDashboard(new Request());
     }
 
-    function closeTicket($id){
+    function closeTicket($id)
+    {
         TicketModel::where('id', $id)
             ->update(['status' => "closed", "closed_at" => Carbon::now()]);
 
-        $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->select("username", "support_ticket.id", "person.email")->where('support_ticket.id', $id)->first();
+        $ticket = TicketModel::join("person", "person.id", "=", "support_ticket.person_id")->select("username", "support_ticket.id", "person.email")->where('support_ticket.id', $id)->first();
         $ticketlog = new TicketLogModel;
         $ticketlog->ticket_id = $id;
-        $ticketlog->message = "ticket was closed by " . auth()->user()->name;
-        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->message = "ticket was closed by " . auth()->user()->username;
+        $ticketlog->created_by = auth()->user()->username;
         $ticketlog->save();
 
         $mailcontroller = new MailController();
-        $mailcontroller->SendEmail("Regarding ticket ".$ticket->id, "Dear, ". $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/".$ticket->id,  $ticket->email);
+        $mailcontroller->SendEmail("Regarding ticket " . $ticket->id, "Dear, " . $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/" . $ticket->id,  $ticket->email);
 
         return $this->loadDashboard(new Request());
     }
 
-    function openTicket($id){
+    function openTicket($id)
+    {
         TicketModel::where('id', $id)
             ->update(['status' => "open", "updated_at" => Carbon::now(), "closed_at" => null]);
 
-        $ticket = TicketModel::join("person","person.id","=","support_ticket.person_id")->where('support_ticket.id', $id)->first();
+        $ticket = TicketModel::join("person", "person.id", "=", "support_ticket.person_id")->where('support_ticket.id', $id)->first();
 
         $ticketlog = new TicketLogModel;
         $ticketlog->ticket_id = $id;
-        $ticketlog->message = "ticket was reopend by " . auth()->user()->name;
-        $ticketlog->created_by = auth()->user()->name;
+        $ticketlog->message = "ticket was reopend by " . auth()->user()->username;
+        $ticketlog->created_by = auth()->user()->username;
         $ticketlog->save();
 
         return $this->loadDashboard(new Request());
     }
 
-    function loadTicketInput(){
+    function loadTicketInput()
+    {
         if (!auth()->user()->can("ticket input")) {
             abort(403);
         }
@@ -420,34 +385,42 @@ class TicketController extends Controller
         return view("ticketInput")->with('types', $types)->with('departments', $department);
     }
 
-    function updateTicket(Request $request){
+    function updateTicket(Request $request)
+    {
         if (!auth()->user()->can("edit ticket")) {
             abort(403);
         }
 
-        $id=$request->id;
-        $type=$request->type;
+        $id = $request->id;
+        $type = $request->type;
+
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $id;
+        $ticketlog->message = auth()->user()->username . " has updated the ticket";
+        $ticketlog->created_by = auth()->user()->username;
+        $ticketlog->save();
 
         TicketModel::where('id', $id)
             ->update(['type' => $type, "updated_at" => Carbon::now()]);
     }
 
-    function editTicketAttachements(Request $request){
+    function editTicketAttachements(Request $request)
+    {
         if (!auth()->user()->can("edit ticket")) {
             abort(403);
         }
 
         $request->except('_token');
         $files = $request->file("Attachments");
-        if($files != null){
-            foreach($files as $file){
+        if ($files != null) {
+            foreach ($files as $file) {
                 $attachment = new attachmentModel;
                 $attachment->name = $file->getClientOriginalName();
                 $attachment->ticket_id = $request->id;
                 $attachment->save();
 
                 $destinationPath = 'uploaded_files';
-                $file->move($destinationPath,$file->getClientOriginalName());
+                $file->move($destinationPath, $file->getClientOriginalName());
             }
         }
         $TicketInformation = $this->GetSingle($request->id, false);
@@ -456,28 +429,36 @@ class TicketController extends Controller
             $status = statusModel::get();
 
             $types = ticketTypes::where('name', '!=', $TicketInformation->ticket['type'])->get();
-            return view("ticketviewer")->with('result' , $TicketInformation->ticket)->with('logs' , $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
+            return view("ticketviewer")->with('result', $TicketInformation->ticket)->with('logs', $TicketInformation->logs)->with('attachment', $TicketInformation->attachments)->with('types', $types)->with('statuses', $status);;
         }
     }
 
-    function updateTicketMessage(Request $request){
+    function updateTicketMessage(Request $request)
+    {
         if (!auth()->user()->can("edit ticket")) {
             abort(403);
         }
 
-        $id=$request->id;
-        $message=$request->message;
+        $id = $request->id;
+        $message = $request->message;
+
+        $ticketlog = new TicketLogModel;
+        $ticketlog->ticket_id = $id;
+        $ticketlog->message = auth()->user()->username . " has updated the ticket message";
+        $ticketlog->created_by = auth()->user()->username;
+        $ticketlog->save();
 
         TicketModel::where('id', $id)
             ->update(['message' => $message, "updated_at" => Carbon::now()]);
     }
 
-    function getUserKPI(){
+    function getUserKPI()
+    {
         $allKpi = [];
         $person_settings = personSettingsModel::where("person_id", auth()->user()->id)
             ->get();
-        foreach($person_settings as $wantedKpi){
-            $kpi = kpiModel::where("id",$wantedKpi["preferd_kpi"])
+        foreach ($person_settings as $wantedKpi) {
+            $kpi = kpiModel::where("id", $wantedKpi["preferd_kpi"])
                 ->get();
             array_push($allKpi, $kpi[0]["kpi"]);
             //array_push($allKpi, $kpi["result"]);
@@ -485,19 +466,20 @@ class TicketController extends Controller
 
         return $allKpi;
     }
-    function getKpi(){
+    function getKpi()
+    {
         $allKpi = $this->getUserKPI();
         $allKpiResults = ["AVR", "AVTR", "TSF", "AUFS", "CS", "SVI"];
         if (auth()->user()->can("view kpi")) {
 
 
-            foreach($allKpi as $kpi){
-                switch($kpi){
+            foreach ($allKpi as $kpi) {
+                switch ($kpi) {
                     case "Average response time":
                         $avr = TicketModel::join("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
                             ->selectRaw("AVG(ROUND(time_to_sec((TIMEDIFF(support_ticket.created_at, ticket_person.created_at))) / 3600)) AS difference")
                             ->get();
-                        $allKpiResults["AVR"] =  number_format(round($avr[0]["difference"], 2),2);
+                        $allKpiResults["AVR"] =  number_format(round($avr[0]["difference"], 2), 2);
                         break;
                     case "Time service factor":
                         $tsf = TicketModel::leftJoin("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
@@ -531,6 +513,5 @@ class TicketController extends Controller
             }
             return $allKpiResults;
         }
-
     }
 }
