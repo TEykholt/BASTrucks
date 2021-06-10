@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -116,7 +117,14 @@ class UserController extends Controller
 
     function edit($id){
         $user = User::findOrFail($id);
-        return view("users/usersEdit")->with('user', $user)->with('id', $id);
+
+        $roles = Role::all();
+        //$userroles = $user->getRoleNames();
+        $userroles = $user->getRoleNames();
+
+        //dd($userroles, $user);
+
+        return view("users/usersEdit")->with('user', $user)->with('id', $id)->with('roles', $roles)->with('userroles', $userroles);
     }
 
     function update($id, Request $request){
@@ -126,8 +134,13 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    function updatePermisions(){
-
+    function updatePermisions(Request $request){
+        $user = User::findOrFail($request->id);
+        if ($request->checked) {
+            $user()->assignRole($request->name);
+        }else{
+            $user()->removeRole($request->name);
+        }
     }
 
     function add(Request $request){

@@ -31,8 +31,57 @@
     </div>
     <div class="col-lg-6 col-12">
         <h1>Edit permissions</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Has permision</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($roles as $result)
+                <tr>
+                    
+                    <td> {{$result->name}} </td>
+                    <td>
+                        <input type="checkbox" name="{{$result->name}}" id="{{$result->name}}" aria-label="" onchange='updaterole("{{$result->name}}")' <?php foreach($userroles as $UR){ if ($UR === $result->name) {
+                            echo("checked");
+                        }} ?> >
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
 </div>
 </body>
 </html>
+
+<script>
+function updaterole(name){
+    const cb = document.getElementById(name);
+
+    var data = {
+        name : name,
+        id : "{{$id}}",
+        checked : cb.checked
+    }
+
+    console.log(data);
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: "POST",
+        dataType : 'json',
+        url: "/admin/roles/update",
+        data: data,
+
+        succes: function(data){
+            console.log(data);
+        }
+    });
+}
+</script>

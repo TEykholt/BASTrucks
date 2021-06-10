@@ -21,6 +21,9 @@ Route::get('/admin/ticketStatus', 'TicketStatusController@index');
 Route::get('/admin/departments', 'DepartmentController@index');
 Route::get('/admin/users', 'UserController@getAllUsers');
 
+//roles
+Route::post('/admin/roles/update', 'UserController@updatePermisions');
+
 //users
 Route::get('/admin/users/delete/{id}', 'UserController@Delete');
 Route::get('/admin/users/create', 'UserController@create');
