@@ -1,7 +1,7 @@
 @include("incl/header")
 
 <h1>Users</h1>
-<p><a href="/admin/department/create" class="btn btn-dark btn-large">Add New</a><p>
+<p><a href="/admin/users/create" class="btn btn-dark btn-large">Add New</a><p>
 <table class="table">
     <thead>
         <tr>

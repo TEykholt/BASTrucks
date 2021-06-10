@@ -8,6 +8,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 
 class UserController extends Controller
 {
@@ -107,5 +108,45 @@ class UserController extends Controller
     function getAllUsers(){
         $users = User::all();
         return view("users/users")->with('users', $users);
+    }
+
+    function create(){
+        return view("users/usersCreate");
+    }
+
+    function edit($id){
+        $user = User::findOrFail($id);
+        return view("users/usersEdit")->with('user', $user)->with('id', $id);
+    }
+
+    function update($id, Request $request){
+        $password = Hash::make($request->password);
+        User::where("id", $id)
+            ->update(['username' => $request->username, "email" => $request->email,'job_title' => $request->jobtitle , 'password' => $password, 'tell' => $request->tell]);
+        return redirect()->back();
+    }
+
+    function updatePermisions(){
+
+    }
+
+    function add(Request $request){
+        $password = Hash::make($request->password);
+
+        $user = new User;
+        $user->email = $request->email;
+        $user->username = $request->username;
+        $user->job_title = $request->jobtitle;
+        $user->tell = $request->tell;
+        $user->password = $password;
+        $user->save();
+
+        return Redirect::to('/admin/users');
+    }
+
+    function delete($id){
+        $user = User::findOrFail($id);
+        $user->delete();
+        return Redirect::to('/admin/users');
     }
 }
