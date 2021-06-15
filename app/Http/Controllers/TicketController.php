@@ -128,7 +128,7 @@ class TicketController extends Controller
             imap_close($inbox);
 
         } catch (\Throwable $th) {
-            
+            throw($th);
         }
     }
 
