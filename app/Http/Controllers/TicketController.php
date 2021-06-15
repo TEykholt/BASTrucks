@@ -28,12 +28,6 @@ class TicketController extends Controller
 
     function loadDashboard(Request $repuest)
     {
-        //ToDo: implement permissions
-
-        $DefaultRoles = [
-            "admin"
-        ];
-        auth()->user()->assignRole($DefaultRoles);
 
         if ($repuest) {
             switch ($repuest->dashType) {
