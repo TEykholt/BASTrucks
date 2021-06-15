@@ -112,6 +112,9 @@ class UserController extends Controller
     }
 
     function create(){
+        if (!auth()->user()->can("admin panel")){
+            abort(403);
+        }
         return view("users/usersCreate");
     }
 
@@ -135,6 +138,9 @@ class UserController extends Controller
     }
 
     function updatePermisions(Request $request){
+        if (!auth()->user()->can("admin panel")){
+            abort(403);
+        }
         $user = User::findOrFail($request->id);
         if ($request->checked) {
             $user()->assignRole($request->name);
@@ -158,6 +164,10 @@ class UserController extends Controller
     }
 
     function delete($id){
+        if (!auth()->user()->can("admin panel")){
+            abort(403);
+        }
+        
         $user = User::findOrFail($id);
         $user->delete();
         return Redirect::to('/admin/users');
