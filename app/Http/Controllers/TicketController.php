@@ -128,7 +128,7 @@ class TicketController extends Controller
             imap_close($inbox);
 
         } catch (\Throwable $th) {
-            throw($th);
+
         }
     }
 
@@ -328,9 +328,12 @@ class TicketController extends Controller
         $ticketlog->created_by = auth()->user()->username;
         $ticketlog->save();
 
-        $mailcontroller = new MailController();
-        $mailcontroller->SendEmail($request->subject, "Dear, " . auth()->user()->username, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
+        try {
+            $mailcontroller = new MailController();
+            $mailcontroller->SendEmail($request->subject, "Dear, " . auth()->user()->username, "Your ticket has been succesfully recieved and we will do our best to complete your ticket as fast as possible",  auth()->user()->email);
+        } catch (\Throwable $th) {
 
+        }
         return $this->loadDashboard(new Request());
     }
 
@@ -346,9 +349,12 @@ class TicketController extends Controller
         $ticketlog->created_by = auth()->user()->username;
         $ticketlog->save();
 
-        $mailcontroller = new MailController();
-        $mailcontroller->SendEmail("Regarding ticket " . $ticket->id, "Dear, " . $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/" . $ticket->id,  $ticket->email);
-
+        try {
+            $mailcontroller = new MailController();
+            $mailcontroller->SendEmail("Regarding ticket " . $ticket->id, "Dear, " . $ticket->name, "Has succesfully been completed and is now set to closed. We would like for you to fill in this short form of how our services where regarding your ticket. http://127.0.0.1:8000/Feedback/" . $ticket->id,  $ticket->email);
+        } catch (\Throwable $th) {
+            
+        }
         return $this->loadDashboard(new Request());
     }
 
