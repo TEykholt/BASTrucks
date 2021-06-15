@@ -89,6 +89,7 @@ class UserController extends Controller
     }
 
     function updateUser(Request  $request){
+        
         $FullName = $request->firstname." ".$request->lastname;
         $password = Hash::make($request->password);
         User::where("id", auth()->user()->id)
@@ -119,6 +120,10 @@ class UserController extends Controller
     }
 
     function edit($id){
+        if (!auth()->user()->can("admin panel")) {
+            abort(403);
+        }
+        
         $user = User::findOrFail($id);
 
         $roles = Role::all();
@@ -131,6 +136,10 @@ class UserController extends Controller
     }
 
     function update($id, Request $request){
+        if (!auth()->user()->can("admin panel")) {
+            abort(403);
+        }
+
         $password = Hash::make($request->password);
         User::where("id", $id)
             ->update(['username' => $request->username, "email" => $request->email,'job_title' => $request->jobtitle , 'password' => $password, 'tell' => $request->tell]);
