@@ -477,9 +477,10 @@ class TicketController extends Controller
                 switch ($kpi) {
                     case "Average response time":
                         $avr = TicketModel::join("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
-                            ->selectRaw("AVG(ROUND(time_to_sec((TIMEDIFF(support_ticket.created_at, ticket_person.created_at))) / 3600)) AS difference")
+                            ->selectRaw("AVG(ROUND(time_to_sec((TIMEDIFF(ticket_person.created_at, support_ticket.created_at))) / 3600)) AS difference")
                             ->get();
-                        $allKpiResults["AVR"] =  number_format(round($avr[0]["difference"], 2), 2);
+                        $allKpiResults["AVR"] =  number_format(round($avr[0]["difference"], 2),2);
+                        //dd($allKpiResults["AVR"]);
                         break;
                     case "Time service factor":
                         $tsf = TicketModel::leftJoin("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
