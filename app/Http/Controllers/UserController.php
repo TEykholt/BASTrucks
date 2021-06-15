@@ -142,10 +142,11 @@ class UserController extends Controller
             abort(403);
         }
         $user = User::findOrFail($request->id);
+
         if ($request->checked) {
-            $user()->assignRole($request->name);
+            $user->assignRole($request->name);
         }else{
-            $user()->removeRole($request->name);
+            $user->removeRole($request->name);
         }
     }
 

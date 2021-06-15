@@ -29,6 +29,27 @@
             <input required type="submit" class="btn btn-primary" value="Update person"/>
         </form>
     </div>
+
+    <!-- <div class="col-lg-6 col-12">
+        <h1>Test</h1>
+        <form method="POST" action="/admin/roles/update">
+            @csrf
+            <div class="form-group">
+                <label for="id">id</label>
+                <input required type="text" class="form-control" id="id" name="id" value="{{$id}}">
+            </div>
+            <div class="form-group">
+                <label for="name">name</label>
+                <input required type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="checked">checked</label>
+                <input required type="checkbox" class="form-control" id="checked" name="checked" value="{{$user->username}}">
+            </div>
+            <input required type="submit" class="btn btn-primary" value="Test"/>
+        </form>
+    </div> -->
+
     <div class="col-lg-6 col-12">
         <h1>Edit permissions</h1>
         <table>
