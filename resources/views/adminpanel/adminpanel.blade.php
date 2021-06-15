@@ -20,7 +20,7 @@
         <div class="card m-2" style="width: 20rem;">
             <div class="card-body">
                 <h5 class="card-title">Departments</h5>
-                <p class="card-text">Edit the type of the departments kpi.</p>
+                <p class="card-text">Edit the type of the departments.</p>
                 <a href="/admin/departments" class="btn btn-primary">Manage</a>
             </div>
         </div>
@@ -29,7 +29,7 @@
         <div class="card m-2" style="width: 20rem;">
             <div class="card-body">
                 <h5 class="card-title">Users</h5>
-                <p class="card-text">Edit the type of the departments kpi.</p>
+                <p class="card-text">Manage users and their permissions.</p>
                 <a href="/admin/users" class="btn btn-primary">Manage</a>
             </div>
         </div>
