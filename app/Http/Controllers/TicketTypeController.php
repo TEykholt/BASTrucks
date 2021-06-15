@@ -44,7 +44,7 @@ class TicketTypeController extends Controller
             abort(403);
         }
         ticketTypes::create($request->all());
-        return Redirect::to('admin/ticketType');
+        return Redirect::to('admin/ticketTypes');
     }
 
     function Update($id, Request $request)
@@ -55,7 +55,7 @@ class TicketTypeController extends Controller
         $type = ticketTypes::findOrFail($id);
         $input = $request->all();
         $type->fill($input)->save();
-        return Redirect::to('admin/ticketType');
+        return Redirect::to('admin/ticketTypes');
     }
 
     function Delete($id)
@@ -65,6 +65,6 @@ class TicketTypeController extends Controller
         }
         $type = ticketTypes::findOrFail($id);
         $type->delete();
-        return Redirect::to('admin/ticketType');
+        return Redirect::to('admin/ticketTypes');
     }
 }
