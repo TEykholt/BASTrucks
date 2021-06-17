@@ -140,8 +140,8 @@ class TicketController extends Controller
             ->selectRaw('DISTINCT support_ticket.id, support_ticket.status, subject, type, message, person.username as person_name, department.name as department_name, ticket_person.person_id, (SELECT username FROM person WHERE person.id = ticket_person.person_id) as ticketWorker')
             ->where('support_ticket.person_id', auth()->user()->id)
             ->where('closed_at',  null)
-            ->get()
-            ->unique("support_ticket.id");
+            ->get();
+            //            ->unique("support_ticket.id");
 
         $workerData = TicketModel::join("ticket_person", "ticket_person.ticket_id", "=", "support_ticket.id")
             ->join("person", "person.id", "=", "ticket_person.person_id")
